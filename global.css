@@ -1,0 +1,46 @@
+* {
+    box-sizing: border-box;
+}
+
+header {
+    grid-area: header;
+    text-align: center;
+}
+
+main {
+    grid-area: main;
+}
+
+#pageNav {
+    grid-area: navbar;
+    border: 3px solid black;
+}
+
+.navList {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 20px;
+}
+#contentNav {
+    grid-area: contentnav;
+}
+
+footer {
+    grid-area: footer;
+}
+
+body {
+    min-height: 100vh;
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 10% auto 10%;
+    grid-template-rows: min-content 5% auto 10%;
+    grid-template-areas:
+        ". header ."
+        "navbar navbar navbar"
+        "contentnav main right"
+        ". footer .";
+}
