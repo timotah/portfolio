@@ -1,14 +1,25 @@
 * {
     box-sizing: border-box;
+    font-family: "Lucida", monospace, sans-serif;
+}
+
+/* you put the transition on the thing transitioning, the child element doing the moving, so our "card" div */
+
+.card {
+    transition: all 1s;
+    grid-area: main;
+    height: 100vh;
+    position: relative;
+    top: 0;
+}
+
+.container:hover .card {
+    transform: translateY(100%);
 }
 
 header {
     grid-area: header;
     text-align: center;
-}
-
-main {
-    grid-area: main;
 }
 
 #pageNav {
