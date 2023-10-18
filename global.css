@@ -3,55 +3,68 @@
     font-family: "Lucida", monospace, sans-serif;
 }
 
-/* you put the transition on the thing transitioning, the child element doing the moving, so our "card" div */
-
-.card {
-    transition: all 1s;
-    grid-area: main;
-    height: 100vh;
-    position: relative;
-    top: 0;
+.navigation {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    text-decoration: underline;
 }
 
-.container:hover .card {
-    transform: translateY(100%);
+section {
+    display: flex;
+    flex-direction: column;
 }
 
 header {
     grid-area: header;
     text-align: center;
+    background-color: red;
 }
 
-#pageNav {
-    grid-area: navbar;
-    border: 3px solid black;
-}
-
-.navList {
+main {
+    grid-area: main;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    margin-bottom: 20px;
+    grid-template-columns: 40% 1fr;
 }
-#contentNav {
-    grid-area: contentnav;
+
+.my-name {
+    grid-column: 1 / 2;
+    font-size: 5em;
+}
+
+.resume {
+    font-size: 2em;
+}
+
+.icon {
+    height: 100px;
+    width: 100px;
+    font-size: 1rem;
+    background-color: yellow;
+    margin: 5px;
 }
 
 footer {
     grid-area: footer;
+    background-color: green;
 }
 
 body {
-    min-height: 100vh;
+    height: 100vh;
+    margin: 0;
     display: grid;
     gap: 10px;
-    grid-template-columns: 10% auto 10%;
-    grid-template-rows: min-content 5% auto 10%;
+    grid-template-columns: minmax(200px, auto) 1fr minmax(200px, auto);
+    grid-template-rows: auto 1fr auto;
     grid-template-areas:
         ". header ."
-        "navbar navbar navbar"
-        "contentnav main right"
+        ". main ."
         ". footer .";
+}
+
+.center {
+    display: grid;
+    place-items: center;
 }
