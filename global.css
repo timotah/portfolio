@@ -1,3 +1,5 @@
+@import url("node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css");
+
 * {
     box-sizing: border-box;
     font-family: "Lucida", monospace, sans-serif;
@@ -15,7 +17,6 @@ header,
 main,
 footer {
     max-height: 100vh;
-    overflow-y: scroll;
     scroll-snap-align: start;
 }
 
@@ -25,11 +26,8 @@ footer {
 }
 
 .console-header {
-    font-size: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
+    padding: 10%;
+    font-size: 3rem;
     grid-row: 1;
     .typed {
         border-right: 0.1em solid greenyellow;
@@ -42,7 +40,7 @@ footer {
             blinking 1s steps(10) infinite normal;
     }
     .description {
-        font-size: 18px;
+        font-size: 1rem;
     }
 }
 
@@ -50,23 +48,21 @@ footer {
     grid-row: 2;
     display: flex;
     justify-content: space-evenly;
-
-    .button {
-        height: 100%;
-        width: 30%;
-    }
 }
 
+.button {
+    height: 100%;
+    width: 30%;
+    font-weight: bold;
+    font-size: 3em;
+    background-color: transparent;
+    border: none;
+}
 .socials {
     grid-row: 3;
     display: flex;
     align-items: end;
     justify-content: space-evenly;
-
-    .button {
-        height: 100%;
-        width: 30%;
-    }
 }
 
 @keyframes typing {
