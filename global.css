@@ -1,5 +1,8 @@
-@import url("node_modules/@fortawesome/fontawesome-free/css/fontawesome.min.css");
+@import url(node_modules/@fortawesome/fontawesome-free/css/all.min.css);
 
+i {
+    font-size: 5rem;
+}
 * {
     box-sizing: border-box;
     font-family: "Lucida", monospace, sans-serif;
@@ -37,7 +40,7 @@ footer {
         vertical-align: top;
         text-wrap: nowrap;
         animation: typing 3s steps(10) 2s 1 normal both,
-            blinking 1s steps(10) infinite normal;
+            blinking 1s infinite normal;
     }
     .description {
         font-size: 1rem;
