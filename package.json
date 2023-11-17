@@ -1,22 +1,21 @@
 {
-  "name": "portfolio",
-  "version": "1.0.0",
-  "description": "Tim Radtke portfolio website",
-  "main": "index.js",
-  "scripts": {
-    "test": "npm run tests"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/timradtke22/portfolio.git"
-  },
-  "author": "Tim Radtke",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/timradtke22/portfolio/issues"
-  },
-  "homepage": "https://github.com/timradtke22/portfolio#readme",
-  "dependencies": {
-    "@fortawesome/fontawesome-free": "^6.4.2"
-  }
+    "version": "1.0.0",
+    "description": "Tim Radtke portfolio website",
+    "main": "index.js",
+    "scripts": {
+        "test": "npm run tests"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/timradtke22/portfolio.git"
+    },
+    "author": "Tim Radtke",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/timradtke22/portfolio/issues"
+    },
+    "homepage": "https://github.com/timradtke22/portfolio#readme",
+    "dependencies": {
+        "@fortawesome/fontawesome-free": "^6.4.2"
+    }
 }
