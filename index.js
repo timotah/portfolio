@@ -7,7 +7,7 @@ const routes = [
     { path: "/projects", callback: () => console.log("Projects page") },
 ];
 
-const router = new Router(routes);
+// const router = new Router(routes);
 
 const portNumber = 8080;
 

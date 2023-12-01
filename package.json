@@ -5,7 +5,8 @@
     "private": true,
     "main": "index.js",
     "scripts": {
-        "test": "npm run tests"
+        "test": "npm run tests",
+        "server": "node server.js"
     },
     "repository": {
         "type": "git",
