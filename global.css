@@ -36,7 +36,7 @@ footer {
 
 .grid {
     display: grid;
-    grid-template-rows: 4fr 3fr 0.5fr;
+    grid-template-rows: 5fr 5fr 1fr;
 }
 
 .console-header {
@@ -66,13 +66,30 @@ footer {
 }
 
 .button {
-    border: 2px dashed var(--console-green);
+    border: 2px solid black;
     height: 100%;
     width: 30%;
     font-weight: bold;
     font-size: 3em;
     background-color: transparent;
-    border: none;
+    position: relative;
+}
+
+.button:hover {
+    background-color: white;
+}
+
+.inner-button {
+    background-color: gray;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    position: absolute;
+    bottom: 10%;
+    width: 150px;
+    height: 50px;
+    border: 1px solid black;
 }
 
 .socials {
