@@ -5,7 +5,7 @@
  */
 
 // I am making an SPA, while this is not SEO
-class Router {
+export default class Router {
     constructor(routes) {
         this.routes = routes;
         this._initRoute();
@@ -26,7 +26,7 @@ class Router {
     _matchUrlToRoute(segment) {
         console.log("seg", segment);
         const matchedRoute = this.routes.find(
-            (route) => route.path === segment
+            (route) => route.path === segment[0]
         );
         return matchedRoute;
     }
@@ -45,5 +45,3 @@ class Router {
         this.loadRoute(path);
     }
 }
-
-module.exports = Router;
