@@ -44,4 +44,12 @@ export default class Router {
         window.history.pushState({}, "", path);
         this.loadRoute(path);
     }
+
+    _loadPage(url) {
+        return fetch(url)
+            .then((response) => response.text())
+            .catch((error) => {
+                console.warn(error);
+            });
+    }
 }

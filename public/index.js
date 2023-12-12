@@ -7,27 +7,19 @@ import Router from "./router.js";
 const routes = [
     {
         path: "",
-        callback: () => {
-            console.log("homepage");
-        },
+        templateURL: "nothing",
     },
     {
         path: "projects",
-        callback: () => {
-            console.log("projects");
-        },
+        templateURL: "/pages/projects.html",
     },
     {
         path: "resume",
-        callback: () => {
-            console.log("resume");
-        },
+        templateURL: "/pages/resume.html",
     },
     {
         path: "contactme",
-        callback: () => {
-            console.log("contactme");
-        },
+        templateURL: "/pages/contactme.html",
     },
 ];
 
