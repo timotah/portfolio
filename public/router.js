@@ -12,9 +12,7 @@ export default class Router {
     }
 
     _initRoute() {
-        const pathnameSplit = window.location.pathname.split("/");
-        const pathSegs = pathnameSplit.length > 1 ? pathnameSplit.slice(1) : "";
-
+        const pathSegs = window.location.pathname.split("/").slice(1);
         this.loadRoute(...pathSegs);
     }
 
