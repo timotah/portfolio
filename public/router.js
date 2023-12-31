@@ -13,7 +13,7 @@ export default class Router {
 
     _initRoute() {
         const pathSegs = window.location.pathname.split("/").slice(1);
-        this.loadRoute(...pathSegs);
+        this.navigate(...pathSegs);
     }
 
     _getURL() {
@@ -29,25 +29,28 @@ export default class Router {
         return matchedRoute;
     }
 
-    loadRoute(...urlSegs) {
+    validateRoute(...urlSegs) {
         const matchedRoute = this._matchUrlToRoute(urlSegs);
+        console.log("matched", matchedRoute);
         if (!matchedRoute) {
             console.log(matchedRoute);
             throw new Error("Route not found");
         }
-        matchedRoute.callback();
+        return matchedRoute;
     }
 
     navigate(path) {
         window.history.pushState({}, "", path);
-        this.loadRoute(path);
+        this._loadPage(this.validateRoute(path).templateURL);
     }
 
-    _loadPage(url) {
-        return fetch(url)
+    async _loadPage(url) {
+        console.log("fetching", url);
+        const routerOutlet = document.getElementById("router-outlet");
+        // using async/await and then/catch in combination because .text() returns a promise here and allows for simple error handling
+        const contentHTML = await fetch(url)
             .then((response) => response.text())
-            .catch((error) => {
-                console.warn(error);
-            });
+            .catch((err) => console.log(err));
+        routerOutlet.innerHTML = contentHTML;
     }
 }
