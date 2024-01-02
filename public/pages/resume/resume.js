@@ -1,6 +1,6 @@
 "uae strict";
 
-import DefaultClass from "./defaultClass.js";
+import DefaultClass from "/js/defaultClass.js";
 
 export default class Resume extends DefaultClass {
     constructor(params) {

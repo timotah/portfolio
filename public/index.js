@@ -10,44 +10,61 @@
  */
 
 import Router from "./router.js";
-import Contact from "./pages/js/contact.js";
-import Projects from "./pages/js/projects.js";
-import Resume from "./pages/js/resume.js";
+// import Contact from "./pages/js/contact.js";
+// import Projects from "./pages/js/projects.js";
+// import Resume from "./pages/js/resume.js";
 
-const routes = [
-    {
-        path: "",
-        templateURL: "nothing",
-        page: "Handled in index",
-    },
-    {
-        path: "projects",
-        templateURL: "/pages/projects.html",
-        page: Projects,
-    },
-    {
-        path: "resume",
-        templateURL: "/pages/resume.html",
-        page: Resume,
-    },
-    {
-        path: "contactme",
-        templateURL: "/pages/contactme.html",
-        page: Contact,
-    },
-];
+export default class App {
+    constructor() {
+        const routes = [
+            {
+                path: "",
+                templateURL: "",
+            },
+            {
+                path: "projects/test",
+                templateURL: "/pages/projects.html",
+            },
+            {
+                path: "resume",
+                templateURL: "/pages/resume.html",
+            },
+            {
+                path: "contactme",
+                templateURL: "/pages/contactme.html",
+            },
+        ];
 
-//match the route
+        // Start routing
+        const router = new Router(routes);
 
-const router = new Router(routes);
+        // // set up button routes
+        // const _resumeBtn = (document.getElementById("resume").onclick = () => {
+        //     console.log("NAVIGAE");
+        //     router.navigate("resume");
+        // });
+        // const _projectsBtn = (document.getElementById("projects").onclick =
+        //     () => {
+        //         router.navigate("projects");
+        //     });
+        // const _contactsBtn = (document.getElementById("contactme").onclick =
+        //     () => {
+        //         router.navigate("contactme");
+        //     });
 
-// set up button routes
-const _resumeBtn = (document.getElementById("resume").onclick = () => {
-    router.navigate("resume");
-});
-const _projectsBtn = (document.getElementById("projects").onclick = () => {
-    router.navigate("projects");
-});
-const _contactsBtn = (document.getElementById("contactme").onclick = () => {
-    router.navigate("contactme");
-});
+        // navigate functions
+        document.addEventListener("DOMContentLoaded", () => {
+            console.log("adding navigation to buttons");
+            document.querySelectorAll("[page]").forEach((element) => {
+                if (routes.find((route) => route.path === element.id)) {
+                    element.onclick = () => {
+                        console.log("HERE");
+                        router.navigate(element.id);
+                    };
+                }
+            });
+        });
+    }
+}
+// start up the initial application
+new App();

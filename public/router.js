@@ -2,6 +2,9 @@
 
 /**
  * @description add in all route to new html pages here, node watch test
+ *
+ * TODO:
+ * 1. Need to have suburls not to error out the page
  */
 
 // I am making an SPA, while this is not SEO
@@ -11,21 +14,24 @@ export default class Router {
         this._initRoute();
     }
 
+    // edit to load in
     _initRoute() {
-        const pathSegs = window.location.pathname.split("/").slice(1);
-        this.navigate(...pathSegs);
+        // creates an array of the path segments
+        const urlSegs = window.location.pathname.split("/").slice(1);
+        this.navigate(...urlSegs);
     }
 
-    _getURL() {
-        const path = window.location.pathname;
-        return path;
-    }
-
-    _matchUrlToRoute(segment) {
-        console.log("seg", segment);
-        const matchedRoute = this.routes.find(
-            (route) => route.path === segment[0]
-        );
+    _matchUrlToRoute(urlSegs) {
+        const matchedRoute = this.routes.find((route) => {
+            const routePathSegs = route.path.split("/").slice(1);
+            if (routePathSegs.length !== urlSegs.length) {
+                return false;
+            }
+            return routePathSegs.every(
+                (routePathSeg, i) => routePathSeg === urlSegs[i]
+            );
+        });
+        console.log(matchedRoute);
         return matchedRoute;
     }
 
@@ -39,18 +45,29 @@ export default class Router {
         return matchedRoute;
     }
 
-    navigate(path) {
-        window.history.pushState({}, "", path);
-        this._loadPage(this.validateRoute(path).templateURL);
+    navigate(urlSegs) {
+        console.log("NAVIGATE URL SEGS", urlSegs);
+        const matchedRoute = this.validateRoute(urlSegs);
+        // correctly format the url with /
+        const url = `/${urlSegs.join("/")}`;
+
+        window.history.pushState({}, "", url);
+
+        this._loadPage(matchedRoute.templateURL);
     }
 
     async _loadPage(url) {
-        console.log("fetching", url);
+        // LOAD IN HTML
         const routerOutlet = document.getElementById("router-outlet");
+
         // using async/await and then/catch in combination because .text() returns a promise here and allows for simple error handling
         const contentHTML = await fetch(url)
             .then((response) => response.text())
             .catch((err) => console.log(err));
         routerOutlet.innerHTML = contentHTML;
+
+        // CONNECT JS FILES
+
+        // CONNECT CSS FILES
     }
 }

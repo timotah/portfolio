@@ -4,8 +4,8 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Document</title>
-        <link rel="stylesheet" href="global.css" />
-        <script src="index.js" type="module"></script>
+        <link rel="stylesheet" href="/global.css" />
+        <script src="./js/index.js" type="module"></script>
     </head>
     <body id="router-outlet" class="grid">
         <header class="console-header">
@@ -31,7 +31,7 @@
             </div>
         </header>
         <main class="button-group">
-            <button id="resume" class="button resume">
+            <button id="resume" class="button resume" page>
                 Resume
                 <!-- cannot nest buttons -->
                 <div id="pdf" class="inner-button" style="left: 10%">
@@ -41,8 +41,8 @@
                     Download .docx
                 </div>
             </button>
-            <button id="projects" class="button">Projects</button>
-            <button id="contactme" class="button">Contact Me</button>
+            <button id="projects" class="button" page>Projects</button>
+            <button id="contactme" class="button" page>Contact Me</button>
         </main>
         <!-- hiding the footer when  -->
         <footer class="socials">
