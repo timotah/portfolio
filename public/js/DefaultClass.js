@@ -1,14 +1,15 @@
 "use strict";
 
 export default class DefaultClass {
-    constructor(params) {
-        document.title(params.title);
+    constructor(page) {
+        this.page = page;
     }
 
     async getHTML() {
-        return `
-            <h1>Default Page</h1>
-            <p>Default Page</p>
-        `;
+        // have to await the fetch, and then chain it to convert response to text
+        const contentHTML = await fetch("/pages/${this.page}/${this.page}.html")
+            .then((response) => response.text())
+            .catch((err) => console.log(err));
+        return contentHTML;
     }
 }

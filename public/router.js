@@ -14,7 +14,14 @@ export default class Router {
         this._initRoute();
     }
 
-    // edit to load in
+    _getCurrentUrl() {
+        return window.location.pathname;
+    }
+
+    /**
+     * @description init the route
+     * @TODO add in ability to load pages with suburls
+     */
     _initRoute() {
         // creates an array of the path segments
         const urlSegs = window.location.pathname.split("/").slice(1);
@@ -22,38 +29,30 @@ export default class Router {
     }
 
     _matchUrlToRoute(urlSegs) {
-        const matchedRoute = this.routes.find((route) => {
-            const routePathSegs = route.path.split("/").slice(1);
-            if (routePathSegs.length !== urlSegs.length) {
-                return false;
-            }
-            return routePathSegs.every(
-                (routePathSeg, i) => routePathSeg === urlSegs[i]
-            );
-        });
-        console.log(matchedRoute);
+        const matchedRoute = this.routes.find(
+            (route) => route.path === urlSegs
+        );
         return matchedRoute;
     }
 
-    validateRoute(...urlSegs) {
+    // this is deconstructed because of the potential for suburls
+    _loadRoute(...urlSegs) {
         const matchedRoute = this._matchUrlToRoute(urlSegs);
-        console.log("matched", matchedRoute);
+
         if (!matchedRoute) {
-            console.log(matchedRoute);
-            throw new Error("Route not found");
+            throw new Error("no route found");
+            return;
         }
-        return matchedRoute;
+        this._loadPage(matchedRoute.templateURL);
     }
 
-    navigate(urlSegs) {
-        console.log("NAVIGATE URL SEGS", urlSegs);
-        const matchedRoute = this.validateRoute(urlSegs);
-        // correctly format the url with /
-        const url = `/${urlSegs.join("/")}`;
-
+    navigateTo(urlSegs) {
         window.history.pushState({}, "", url);
+        this._loadPage(matchedRoute);
+    }
 
-        this._loadPage(matchedRoute.templateURL);
+    back() {
+        window.history.back();
     }
 
     async _loadPage(url) {

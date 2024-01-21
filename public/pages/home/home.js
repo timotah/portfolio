@@ -1,8 +1,8 @@
 "uae strict";
 
-export default class Project {
+export default class Home {
     constructor() {
-        super("projects");
+        super("home");
         console.log("Projects is up and running!");
     }
 }

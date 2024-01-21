@@ -10,47 +10,22 @@
  */
 
 import Router from "./router.js";
-// import Contact from "./pages/js/contact.js";
-// import Projects from "./pages/js/projects.js";
-// import Resume from "./pages/js/resume.js";
+import Home from "./pages/home/home.js";
+import Contact from "./pages/contact/contact.js";
+import Projects from "./pages/projects/projects.js";
+import Resume from "./pages/resume/resume.js";
 
 export default class App {
     constructor() {
-        const routes = [
-            {
-                path: "",
-                templateURL: "",
-            },
-            {
-                path: "projects/test",
-                templateURL: "/pages/projects.html",
-            },
-            {
-                path: "resume",
-                templateURL: "/pages/resume.html",
-            },
-            {
-                path: "contactme",
-                templateURL: "/pages/contactme.html",
-            },
-        ];
+        const routes = {
+            "/": Home,
+            "/projects": Projects,
+            "/resume": Resume,
+            "/contactme": Contact,
+        };
 
         // Start routing
         const router = new Router(routes);
-
-        // // set up button routes
-        // const _resumeBtn = (document.getElementById("resume").onclick = () => {
-        //     console.log("NAVIGAE");
-        //     router.navigate("resume");
-        // });
-        // const _projectsBtn = (document.getElementById("projects").onclick =
-        //     () => {
-        //         router.navigate("projects");
-        //     });
-        // const _contactsBtn = (document.getElementById("contactme").onclick =
-        //     () => {
-        //         router.navigate("contactme");
-        //     });
 
         // navigate functions
         document.addEventListener("DOMContentLoaded", () => {
@@ -63,6 +38,11 @@ export default class App {
                     };
                 }
             });
+        });
+
+        // need to bind for the browsers forward and back buttons
+        window.addEventListener("popstate", () => {
+            router._loadInitialRoute();
         });
     }
 }
