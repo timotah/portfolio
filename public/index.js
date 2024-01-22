@@ -24,26 +24,15 @@ export default class App {
             "/contactme": Contact,
         };
 
+        console.log("App is up and running!");
+
         // Start routing
         const router = new Router(routes);
 
-        // navigate functions
-        document.addEventListener("DOMContentLoaded", () => {
-            console.log("adding navigation to buttons");
-            document.querySelectorAll("[page]").forEach((element) => {
-                if (routes.find((route) => route.path === element.id)) {
-                    element.onclick = () => {
-                        console.log("HERE");
-                        router.navigate(element.id);
-                    };
-                }
-            });
-        });
-
         // need to bind for the browsers forward and back buttons
-        window.addEventListener("popstate", () => {
-            router._loadInitialRoute();
-        });
+        // window.addEventListener("popstate", () => {
+        //     router._loadInitialRoute();
+        // });
     }
 }
 // start up the initial application

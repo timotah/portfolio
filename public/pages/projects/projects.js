@@ -2,7 +2,7 @@
 
 export default class Project {
     constructor() {
-        super("projects");
+        // super("projects");
         console.log("Projects is up and running!");
     }
 }
