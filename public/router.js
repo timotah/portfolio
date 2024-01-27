@@ -11,13 +11,14 @@
 export default class Router {
     constructor(routes) {
         this.routes = routes;
+        this.urlSegs = this.segmentURL(this._getCurrentUrl());
         this._initRoute();
+        this.routerOutlet = document.getElementById("router-outlet");
     }
 
     // in future when needed will tackle the ability to have suburls
 
     _getCurrentUrl() {
-        console.log("window.location.pathname", window.location.pathname);
         return window.location.pathname;
     }
 
@@ -27,23 +28,33 @@ export default class Router {
      */
     _initRoute() {
         // creates an array of the path segments'
-        const urlSegs = window.location.pathname;
-        this.navigateTo(urlSegs);
+        const URL = window.location.pathname;
+        this.navigateTo(this.urlSegs);
     }
 
     _matchUrlToRoute(urlSegs) {
-        // need to change this to search the object for the URL to the route
+        const matchedRoute = this.routes.find((route) => {
+            const routePathSegs = this.segmentURL(route.path);
+
+            // ensure that the url segs and the route path segs are equal
+            return routePathSegs.every((routePathSeg, i) => {
+                return routePathSeg === urlSegs[i];
+            });
+        });
+        return matchedRoute;
     }
 
     // this is deconstructed because of the potential for suburls
     _loadRoute(urlSegs) {
         const matchedRoute = this._matchUrlToRoute(urlSegs);
 
+        console.log(matchedRoute);
+
         if (!matchedRoute) {
             throw new Error("no route found");
             return;
         }
-        this._loadPage(matchedRoute.templateURL);
+        this._loadPage(matchedRoute.component);
     }
 
     navigateTo(urlSegs) {
@@ -55,14 +66,38 @@ export default class Router {
         window.history.back();
     }
 
-    async _loadPage(url) {
-        // LOAD IN HTML
-        const routerOutlet = document.getElementById("router-outlet");
+    segmentURL(URL) {
+        return URL.split("/")
+            .slice(1)
+            .map((seg) => `/${seg}`);
+    }
 
-        // using async/await and then/catch in combination because .text() returns a promise here and allows for simple error handling
-        const contentHTML = await fetch(url)
+    // activate the class, load in the HTML, and start it up
+    async _loadPage(Component) {
+        // LOAD IN HTML
+        const pageName = Component.name.toLowerCase();
+        console.log(pageName);
+        const htmlUrl = `./pages/${pageName}/${pageName}.html`;
+        const cssUrl = `./pages/${pageName}/${pageName}.css`;
+
+        // get HTML and load
+        const contentHTML = await fetch(htmlUrl)
             .then((response) => response.text())
             .catch((err) => console.log(err));
-        routerOutlet.innerHTML = contentHTML;
+
+        this.routerOutlet.innerHTML = contentHTML;
+
+        // get CSS and load
+        const head = document.getElementsByTagName("HEAD")[0];
+        let link = document.createElement("link");
+
+        link.rel = "stylesheet";
+        link.type = "text/css";
+        link.href = cssUrl;
+
+        head.appendChild(link);
+
+        // START UP CLASS
+        new Component();
     }
 }

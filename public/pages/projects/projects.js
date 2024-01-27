@@ -1,8 +1,8 @@
-"uae strict";
-
-export default class Project {
+"use strict";
+import DefaultClass from "/js/defaultClass.js";
+export default class Project extends DefaultClass {
     constructor() {
-        // super("projects");
+        super("projects");
         console.log("Projects is up and running!");
     }
 }

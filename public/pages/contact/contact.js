@@ -1,10 +1,8 @@
 "use strict";
-
-// import DefaultClass from "./js/default.js";
-
-export default class Contact {
+import DefaultClass from "/js/DefaultClass.js";
+export default class Contact extends DefaultClass {
     constructor() {
-        // super("contact");
+        super("contact");
         console.log("Contacts is up and running!");
     }
 }

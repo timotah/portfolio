@@ -11,18 +11,17 @@
 
 import Router from "./router.js";
 import Home from "./pages/home/home.js";
-import Contact from "./pages/contact/contact.js";
 import Projects from "./pages/projects/projects.js";
 import Resume from "./pages/resume/resume.js";
-
+import Contact from "./pages/contact/contact.js";
 export default class App {
     constructor() {
-        const routes = {
-            "/": Home,
-            "/projects": Projects,
-            "/resume": Resume,
-            "/contactme": Contact,
-        };
+        const routes = [
+            { path: "/", component: Home },
+            { path: "/projects", component: Projects },
+            { path: "/resume", component: Resume },
+            { path: "/contactme", component: Contact },
+        ];
 
         console.log("App is up and running!");
 
