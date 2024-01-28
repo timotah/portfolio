@@ -10,15 +10,21 @@
 // I am making an SPA, while this is not SEO
 export default class Router {
     constructor(routes) {
+        this.routerInstance;
+        // delete routes[0];
+
         this.routes = routes;
-        this.urlSegs = this.segmentURL(this._getCurrentUrl());
         this._initRoute();
         this.routerOutlet = document.getElementById("router-outlet");
     }
 
+    appendInstance(router) {
+        this.routerInstance = router;
+    }
+
     // in future when needed will tackle the ability to have suburls
 
-    _getCurrentUrl() {
+    get currentUrl() {
         return window.location.pathname;
     }
 
@@ -28,16 +34,15 @@ export default class Router {
      */
     _initRoute() {
         // creates an array of the path segments'
-        const URL = window.location.pathname;
-        this.navigateTo(this.urlSegs);
+        this.navigateTo(this.currentUrl);
     }
 
     _matchUrlToRoute(urlSegs) {
         const matchedRoute = this.routes.find((route) => {
             const routePathSegs = this.segmentURL(route.path);
-
             // ensure that the url segs and the route path segs are equal
             return routePathSegs.every((routePathSeg, i) => {
+                console.log(routePathSeg, urlSegs[i]);
                 return routePathSeg === urlSegs[i];
             });
         });
@@ -48,8 +53,6 @@ export default class Router {
     _loadRoute(urlSegs) {
         const matchedRoute = this._matchUrlToRoute(urlSegs);
 
-        console.log(matchedRoute);
-
         if (!matchedRoute) {
             throw new Error("no route found");
             return;
@@ -57,7 +60,8 @@ export default class Router {
         this._loadPage(matchedRoute.component);
     }
 
-    navigateTo(urlSegs) {
+    navigateTo(url) {
+        const urlSegs = this.segmentURL(url);
         window.history.pushState({}, "", urlSegs);
         this._loadRoute(urlSegs);
     }
@@ -75,10 +79,10 @@ export default class Router {
     // activate the class, load in the HTML, and start it up
     async _loadPage(Component) {
         // LOAD IN HTML
-        const pageName = Component.name.toLowerCase();
-        console.log(pageName);
-        const htmlUrl = `./pages/${pageName}/${pageName}.html`;
-        const cssUrl = `./pages/${pageName}/${pageName}.css`;
+        const pageName = Component.name;
+        const pageNameLower = Component.name.toLowerCase();
+        const htmlUrl = `./pages/${pageNameLower}/${pageNameLower}.html`;
+        const cssUrl = `./pages/${pageNameLower}/${pageNameLower}.css`;
 
         // get HTML and load
         const contentHTML = await fetch(htmlUrl)
@@ -97,7 +101,7 @@ export default class Router {
 
         head.appendChild(link);
 
-        // START UP CLASS
-        new Component();
+        // START UP CLASS - can call functions in onclick from window component
+        window[pageName] = new Component(this.routerInstance);
     }
 }

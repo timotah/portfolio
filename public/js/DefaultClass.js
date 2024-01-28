@@ -1,4 +1,5 @@
 "use strict";
+import Router from "/router.js";
 
 export default class DefaultClass {
     constructor(page) {
@@ -82,5 +83,10 @@ export default class DefaultClass {
             const mouseY = rect.top;
             return [mouseX, mouseY];
         }
+    }
+
+    navigateTo(urlSegs) {
+        const router = new Router();
+        router.navigateTo(urlSegs);
     }
 }

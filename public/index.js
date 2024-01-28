@@ -16,6 +16,8 @@ import Resume from "./pages/resume/resume.js";
 import Contact from "./pages/contact/contact.js";
 export default class App {
     constructor() {
+        // Start routing
+
         const routes = [
             { path: "/", component: Home },
             { path: "/projects", component: Projects },
@@ -23,10 +25,10 @@ export default class App {
             { path: "/contactme", component: Contact },
         ];
 
-        console.log("App is up and running!");
-
-        // Start routing
         const router = new Router(routes);
+        router.appendInstance(router);
+
+        console.log("App is up and running!");
 
         // need to bind for the browsers forward and back buttons
         // window.addEventListener("popstate", () => {

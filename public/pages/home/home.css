@@ -48,11 +48,18 @@ footer {
     cursor: grab;
     /* prevents text, etc... from inside being highlighted */
     user-select: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-block: 5%;
 }
 
-.box:focus {
-    cursor: grabbing;
+.folder {
+    width: 100%;
+    height: 10%;
+    background-color: blue;
 }
+
 /* 
 .grid {
     display: grid;
