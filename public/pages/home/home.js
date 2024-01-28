@@ -9,6 +9,7 @@ export default class Home extends DefaultClass {
 
     fileCabinet() {
         const fileCabinet = document.getElementById("file-cabinet");
+        // add the offsets of the relative drawer-wrapper
         this.moveElement(fileCabinet, 0, 0);
     }
 
@@ -18,10 +19,14 @@ export default class Home extends DefaultClass {
     }
 
     toContactMe() {
-        this.router.navigateTo("/contact");
+        this.router.navigateTo("/contactme");
     }
 
     toResume() {
         this.router.navigateTo("/resume");
+    }
+
+    fileCabinetBounds() {
+        // there will always be 3 objects, one top,
     }
 }

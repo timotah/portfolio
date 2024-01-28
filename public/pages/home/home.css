@@ -37,133 +37,53 @@ footer {
 
 .cabinet {
     width: 60%;
-    height: 40%;
+    height: 100%;
     background-color: gray;
+    display: grid;
+    grid-template-columns: 0.2fr auto 0.2fr;
+    grid-template-rows: 20% 5% auto;
 }
 
-.box {
-    width: 60%;
-    height: 40%;
+.drawer-inside {
     background-color: red;
     cursor: grab;
-    /* prevents text, etc... from inside being highlighted */
     user-select: none;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding-block: 5%;
+    z-index: 0;
+    grid-row: 1/3;
+    grid-column: 2/3;
+    /* the drawer takes up 2 rows and 1 middle column */
+}
+
+.drawer-front {
+    background-color: green;
+    z-index: 2;
+    grid-row: 3/4;
+    grid-column: 1/4;
+}
+
+.drawer {
+    background-color: transparent;
+    z-index: 0;
+    display: grid;
+    grid-template-columns: 10% auto 10%;
+    grid-template-rows: 1fr 1fr 0.3fr;
+    position: relative;
+    grid-column: 2/3;
+    grid-row: 3;
 }
 
 .folder {
     width: 100%;
-    height: 10%;
+    height: 100px;
     background-color: blue;
+    z-index: 0;
+    margin-block: 5px;
 }
 
-/* 
-.grid {
-    display: grid;
-    grid-template-rows: 5fr 5fr 1fr;
-}
-
-.console-header {
-    color: rgb(145, 237, 145);
-    margin: 10%;
-    font-size: 3rem;
-    grid-row: 1;
-    .typed {
-        border-right: 0.1em solid greenyellow;
-        font-weight: bold;
-        display: inline-block;
-        overflow-x: hidden;
-        vertical-align: top;
-        text-wrap: nowrap;
-        animation: typing 3s steps(10) 2s 1 normal both,
-            blinking 1s infinite normal;
-    }
-    .description {
-        font-size: 1rem;
-    }
-}
-
-.button-group {
-    grid-row: 2;
-    display: flex;
-    justify-content: space-evenly;
-}
-
-.button {
-    border: 2px solid black;
-    height: 100%;
-    width: 30%;
-    font-weight: bold;
-    font-size: 3em;
-    background-color: transparent;
-    position: relative;
-}
-
-.button:hover {
-    background-color: white;
-}
-
-.inner-button {
-    background-color: gray;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1rem;
-    position: absolute;
-    bottom: 10%;
-    width: 150px;
-    height: 50px;
-    border: 1px solid black;
-}
-
-.socials {
+.drawer-wrap {
     grid-row: 3;
-    display: flex;
-    align-items: end;
-    justify-content: end;
+    grid-column: 2/3;
 }
-
-@keyframes typing {
-    from {
-        width: 0;
-    }
-    to {
-        width: 100%;
-    }
-}
-
-@keyframes blinking {
-    from {
-        border-color: transparent;
-    }
-    to {
-        border-color: lightgreen;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    html,
-    body {
-        scroll-snap-type: y mandatory;
-    }
-
-    .grid {
-        grid-template-rows: 100vh 100vh 100vh;
-        grid-template-columns: 1fr;
-    }
-
-    .console-header::after {
-        content: "scroll";
-    }
-
-    .button-group {
-        flex-direction: column;
-
-        .button {
-            width: 100%;
-        }
-    }
-} */

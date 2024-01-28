@@ -17,7 +17,8 @@ export default class DefaultClass {
         }
     }
 
-    moveElement(element) {
+    // the relativeX and relativeY are the offsets from the top left/right of parent element that will reset it to 0
+    moveElement(element, relativeX, relativeY) {
         let isDragging = false;
         let offsetX = 0;
         let offsetY = 0;
@@ -29,10 +30,10 @@ export default class DefaultClass {
 
         function startDrag(event) {
             dragElement = element;
-            element.style.position = "absolute";
             element.style.cursor = "grabbing";
             // mouse offset relative to the element
             offsetX = event.clientX - element.getBoundingClientRect().left;
+            // want the offset not to be
             offsetY = event.clientY - element.getBoundingClientRect().top;
         }
 
@@ -44,6 +45,9 @@ export default class DefaultClass {
                 const mouseY = event.clientY;
                 // subtract the offset of the mouse relative to the element, to keep mouse in same position
                 // element.style.left = mouseX - offsetX + "px";
+
+                // this 254 is from top of screen, to top of wrapper, need to acct for that offset
+                // that is between the relative element and the screen
                 element.style.top = mouseY - offsetY + "px";
 
                 // Get the bounds of the window
@@ -65,9 +69,7 @@ export default class DefaultClass {
                 //     element.style.left = maxX + "px";
                 // }
 
-                if (mouseY - offsetY < 0) {
-                    element.style.top = "0px";
-                } else if (mouseY - offsetY > maxY) {
+                if (mouseY - offsetY > maxY) {
                     element.style.top = maxY + "px";
                 }
             }

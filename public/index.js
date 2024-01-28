@@ -30,10 +30,10 @@ export default class App {
 
         console.log("App is up and running!");
 
-        // need to bind for the browsers forward and back buttons
-        // window.addEventListener("popstate", () => {
-        //     router._loadInitialRoute();
-        // });
+        //need to bind for the browsers forward and back buttons
+        window.addEventListener("popstate", () => {
+            router._initRoute();
+        });
     }
 }
 // start up the initial application

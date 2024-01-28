@@ -1,9 +1,22 @@
 <script type="module" src="/pages/home.js"></script>
 
 <main>
-    <div id="file-cabinet" class="box">
-        <button class="folder" onclick="Home.toResume()">Resume</button>
-        <button class="folder" onclick="Home.toContactMe()">Contact Me</button>
-        <button class="folder" onclick="Home.toProjects()">Projects</button>
+    <div class="cabinet">
+        <div class="drawer-wrap">
+            <div id="file-cabinet" class="drawer">
+                <div class="drawer-inside">
+                    <button class="folder" onclick="Home.toResume()">
+                        Resume
+                    </button>
+                    <button class="folder" onclick="Home.toContactMe()">
+                        Contact Me
+                    </button>
+                    <button class="folder" onclick="Home.toProjects()">
+                        Projects
+                    </button>
+                </div>
+                <div class="drawer-front"></div>
+            </div>
+        </div>
     </div>
 </main>
