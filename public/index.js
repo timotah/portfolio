@@ -13,7 +13,7 @@ import Router from "./router.js";
 import Home from "./pages/home/home.js";
 import Projects from "./pages/projects/projects.js";
 import Resume from "./pages/resume/resume.js";
-import Contact from "./pages/contact/contact.js";
+import ContactMe from "./pages/contactme/contactme.js";
 export default class App {
     constructor() {
         // Start routing
@@ -22,7 +22,7 @@ export default class App {
             { path: "/", component: Home },
             { path: "/projects", component: Projects },
             { path: "/resume", component: Resume },
-            { path: "/contactme", component: Contact },
+            { path: "/contactme", component: ContactMe },
         ];
 
         const router = new Router(routes);

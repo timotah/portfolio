@@ -81,8 +81,8 @@ export default class Router {
         // LOAD IN HTML
         const pageName = Component.name;
         const pageNameLower = Component.name.toLowerCase();
-        const htmlUrl = `./pages/${pageNameLower}/${pageNameLower}.html`;
-        const cssUrl = `./pages/${pageNameLower}/${pageNameLower}.css`;
+        const htmlUrl = `/pages/${pageNameLower}/${pageNameLower}.html`;
+        const cssUrl = `/pages/${pageNameLower}/${pageNameLower}.css`;
 
         // get HTML and load
         const contentHTML = await fetch(htmlUrl)
@@ -92,14 +92,11 @@ export default class Router {
         this.routerOutlet.innerHTML = contentHTML;
 
         // get CSS and load
-        const head = document.getElementsByTagName("HEAD")[0];
-        let link = document.createElement("link");
+        let link = document.querySelector("[component-styles]");
 
         link.rel = "stylesheet";
         link.type = "text/css";
         link.href = cssUrl;
-
-        head.appendChild(link);
 
         // START UP CLASS - can call functions in onclick from window component
         window[pageName] = new Component(this.routerInstance);

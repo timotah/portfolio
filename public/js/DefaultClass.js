@@ -1,9 +1,10 @@
 "use strict";
-import Router from "/router.js";
 
 export default class DefaultClass {
-    constructor(page) {
+    constructor(page, router) {
+        // bad OOO but its so clean and easy to use
         this.page = page;
+        this.router = router;
     }
 
     removeCSS() {
@@ -86,7 +87,6 @@ export default class DefaultClass {
     }
 
     navigateTo(urlSegs) {
-        const router = new Router();
         router.navigateTo(urlSegs);
     }
 }

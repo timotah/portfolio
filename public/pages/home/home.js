@@ -1,10 +1,9 @@
 "use strict";
-import DefaultClass from "/js/defaultClass.js";
+import DefaultClass from "/js/DefaultClass.js";
 
 export default class Home extends DefaultClass {
-    constructor(routerInstance) {
-        super("home");
-        this.router = routerInstance;
+    constructor(router) {
+        super("home", router);
         this.fileCabinet();
     }
 
@@ -13,8 +12,16 @@ export default class Home extends DefaultClass {
         this.moveElement(fileCabinet, 0, 0);
     }
 
-    hello() {
+    toProjects() {
         console.log(this.router);
         this.router.navigateTo("/projects");
+    }
+
+    toContactMe() {
+        this.router.navigateTo("/contact");
+    }
+
+    toResume() {
+        this.router.navigateTo("/resume");
     }
 }
