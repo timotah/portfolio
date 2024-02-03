@@ -18,7 +18,8 @@ export default class DefaultClass {
     }
 
     // the relativeX and relativeY are the offsets from the top left/right of parent element that will reset it to 0
-    moveElement(element, relativeX, relativeY) {
+    moveElement(element, relativeX = 0, relativeY = 0) {
+        console.log("moving");
         let isDragging = false;
         let offsetX = 0;
         let offsetY = 0;
@@ -49,6 +50,7 @@ export default class DefaultClass {
                 // this 254 is from top of screen, to top of wrapper, need to acct for that offset
                 // that is between the relative element and the screen
                 element.style.top = mouseY - offsetY + "px";
+                console.log(element.style.top);
 
                 // Get the bounds of the window
                 // const windowWidth = window.innerWidth;
