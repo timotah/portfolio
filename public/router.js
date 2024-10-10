@@ -7,98 +7,80 @@
  * 1. Need to have suburls not to error out the page
  */
 
-// I am making an SPA, while this is not SEO
-export default class Router {
+class Router {
     constructor(routes) {
-        this.routerInstance;
-        // delete routes[0];
-
         this.routes = routes;
-        this._initRoute();
-        this.routerOutlet = document.getElementById("router-outlet");
-    }
-
-    appendInstance(router) {
-        this.routerInstance = router;
-    }
-
-    // in future when needed will tackle the ability to have suburls
-
-    get currentUrl() {
-        return window.location.pathname;
-    }
-
-    /**
-     * @description init the route
-     * @TODO add in ability to load pages with suburls
-     */
-    _initRoute() {
-        // creates an array of the path segments'
-        this.navigateTo(this.currentUrl);
-    }
-
-    _matchUrlToRoute(urlSegs) {
-        const matchedRoute = this.routes.find((route) => {
-            const routePathSegs = this.segmentURL(route.path);
-            // ensure that the url segs and the route path segs are equal
-            return routePathSegs.every((routePathSeg, i) => {
-                console.log(routePathSeg, urlSegs[i]);
-                return routePathSeg === urlSegs[i];
-            });
+        this._loadInitialRoute();
+        window.addEventListener('popstate', () => {
+            this._loadRoute(window.location.pathname);
         });
+    }
+
+    _loadInitialRoute() {
+        const pathName = window.location.pathname;
+        this._loadRoute(pathName);
+    }
+
+    _loadRoute(pathName) {
+        const matchedRoute = this._matchUrlToRoute(pathName.split('/').slice(1));
+        const url = `/${pathName.split('/').slice(1).join('/')}`;
+        history.pushState({}, 'this works', url);
+
+        const routerOutlet = document.getElementById('router-outlet');
+        routerOutlet.innerHTML = matchedRoute.template;
+    }
+
+    navigateTo(pathName) {
+        this._loadRoute(pathName);
+    }
+
+    _matchUrlToRoute(urlSegments) {
+        const matchedRoute = this.routes.find(route => {
+            const routePathSegments = route.path.split('/').slice(1);
+
+            if (routePathSegments.length !== urlSegments.length) {
+                return false;
+            }
+
+            return routePathSegments.every((routePathSegment, i) => routePathSegment === urlSegments[i]);
+        });
+
         return matchedRoute;
     }
-
-    // this is deconstructed because of the potential for suburls
-    _loadRoute(urlSegs) {
-        const matchedRoute = this._matchUrlToRoute(urlSegs);
-
-        if (!matchedRoute) {
-            throw new Error("no route found");
-            return;
-        }
-        this._loadPage(matchedRoute.component);
-    }
-
-    navigateTo(url) {
-        const urlSegs = this.segmentURL(url);
-        window.history.pushState({}, "", urlSegs);
-        this._loadRoute(urlSegs);
-    }
-
-    back() {
-        window.history.back();
-    }
-
-    segmentURL(URL) {
-        return URL.split("/")
-            .slice(1)
-            .map((seg) => `/${seg}`);
-    }
-
-    // activate the class, load in the HTML, and start it up
-    async _loadPage(Component) {
-        // LOAD IN HTML
-        const pageName = Component.name;
-        const pageNameLower = Component.name.toLowerCase();
-        const htmlUrl = `/pages/${pageNameLower}/${pageNameLower}.html`;
-        const cssUrl = `/pages/${pageNameLower}/${pageNameLower}.css`;
-
-        // get HTML and load
-        const contentHTML = await fetch(htmlUrl)
-            .then((response) => response.text())
-            .catch((err) => console.log(err));
-
-        this.routerOutlet.innerHTML = contentHTML;
-
-        // get CSS and load
-        let link = document.querySelector("[component-styles]");
-
-        link.rel = "stylesheet";
-        link.type = "text/css";
-        link.href = cssUrl;
-
-        // START UP CLASS - can call functions in onclick from window component
-        window[pageName] = new Component(this.routerInstance);
-    }
 }
+
+const routes = [
+    { path: '/', template: '<h1>Home</h1>' },
+    { path: '/about', template: '<h1>About</h1>' },
+    { path: '/contact', template: '<h1>Contact</h1>' }
+];
+
+const router = new Router(routes);
+
+
+//     // activate the class, load in the HTML, and start it up
+//     async _loadPage(Component) {
+//         // LOAD IN HTML
+//         const pageName = Component.name;
+//         const pageNameLower = Component.name.toLowerCase();
+//         const htmlUrl = `/pages/${pageNameLower}/${pageNameLower}.html`;
+//         const cssUrl = `/pages/${pageNameLower}/${pageNameLower}.css`;
+
+//         // get HTML and load
+//         const contentHTML = await fetch(htmlUrl)
+//             .then((response) => response.text())
+//             .catch((err) => console.log(err));
+
+//         this.routerOutlet.innerHTML = contentHTML;
+
+//         // get CSS and load
+//         let link = document.querySelector("[component-styles]");
+
+//         link.rel = "stylesheet";
+//         link.type = "text/css";
+//         link.href = cssUrl;
+
+//         // START UP CLASS - can call functions in onclick from window component
+//         window[pageName] = new Component(this.routerInstance);
+//     }
+// }

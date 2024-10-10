@@ -3,3 +3,23 @@
 * {
     overflow: hidden;
 }
+
+.container {
+    display: grid;
+    height: 100vh;
+    grid-template-rows: auto 1fr;
+    grid-template-areas: 
+        "header"
+        "main";
+}
+
+/* across flexbox of all possible buttons */
+.nav {
+    /* background-color: green; */
+    grid-area: header;
+}
+
+.content {
+    grid-area: main;
+    /* background-color: red; */
+}
