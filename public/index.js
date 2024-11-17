@@ -8,33 +8,13 @@
  * 5. Keep resume in S3 to avoid it being loaded in with static every time? - finished site problem
  *
  */
+import { router } from "./router.js";
 
-import Router from "./router.js";
-import Home from "./pages/home/home.js";
-import Projects from "./pages/projects/projects.js";
-import Resume from "./pages/resume/resume.js";
-import ContactMe from "./pages/contactme/contactme.js";
 export default class App {
-    constructor() {
-        // Start routing
-
-        const routes = [
-            { path: "/", component: Home },
-            { path: "/projects", component: Projects },
-            { path: "/resume", component: Resume },
-            { path: "/contactme", component: ContactMe },
-        ];
-
-        const router = new Router(routes);
-        router.appendInstance(router);
-
-        console.log("App is up and running!");
-
-        //need to bind for the browsers forward and back buttons
-        window.addEventListener("popstate", () => {
-            router._initRoute();
-        });
-    }
+  constructor() {
+    // define all base routes here, suburls will later be handled in respective modules
+    // start routing
+  }
 }
 // start up the initial application
 new App();

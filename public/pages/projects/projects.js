@@ -1,8 +1,8 @@
 "use strict";
-import DefaultClass from "/js/defaultClass.js";
-export default class Projects extends DefaultClass {
-    constructor(router) {
-        super("projects", router);
-        console.log("Projects is up and running!");
-    }
+import BaseComponent from "../../js/BaseComponent.js";
+export default class Projects extends BaseComponent {
+  constructor(router) {
+    super("projects", router);
+    console.log("Projects is up and running!");
+  }
 }
