@@ -1,5 +1,5 @@
-const http = require("http");
-const fs = require("fs");
+// const http = require("http");
+// const fs = require("fs");
 const path = require("path");
 const express = require("express");
 
@@ -14,6 +14,6 @@ app.get("/*", (req, res) => {
 });
 
 // Start the server and listen on the specified port
-const server = app.listen(port, () => {
+app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
