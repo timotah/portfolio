@@ -33,9 +33,10 @@ class Router {
     history.pushState({}, "this works", url);
 
     const routerOutlet = document.getElementById("router-outlet");
-    routerOutlet.innerHTML = await this.loadComponent(
-      matchedRoute
-    ).loadComponentHtml();
+    const initClass = this.loadComponent(matchedRoute);
+    routerOutlet.innerHTML = await initClass.loadComponentHtml(
+      initClass.constructor.name.toLowerCase()
+    );
   }
 
   navigateTo(pathName) {
@@ -43,9 +44,7 @@ class Router {
   }
 
   _matchUrlToRoute(urlSegment) {
-    console.log(urlSegment);
     const matchedRoute = this.routes.find((route) => {
-      console.log(route.path);
       return route.path === urlSegment;
     });
 
@@ -55,7 +54,6 @@ class Router {
   // components called via the router will only need single instance use
   // the only components that should be able to exist multiple times are those that are page specific
   loadComponent(route) {
-    console.log(route);
     const path = route.path;
 
     // Check if component instance exists in cache

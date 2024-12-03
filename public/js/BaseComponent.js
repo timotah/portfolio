@@ -4,8 +4,8 @@ export default class BaseComponent {
   componentName;
   constructor(componentName) {
     this.componentName = componentName;
-    this.cssUrl = `./${componentName}/${componentName}.css`;
-    this.htmlUrl = `./${componentName}/${componentName}.html`;
+    this.cssUrl = `../pages/${componentName}/${componentName}.css`;
+    this.htmlUrl = `../pages/${componentName}/${componentName}.html`;
     // this.loadCSS();
   }
 
@@ -23,17 +23,22 @@ export default class BaseComponent {
     return; /*html*/
   }
 
-  async loadComponentHtml(componentName) {
+  async loadComponentHtml() {
+    console.log("Loading HTML for", this.componentName);
     try {
+      console.log("fetching", this.htmlUrl);
       const response = await fetch(this.htmlUrl);
+      console.log(response);
       if (!response.ok) {
-        throw new Error(`Failed to load ${componentName}.html`);
+        console.log("here?");
+        throw new Error(`Failed to load ${this.componentName}.html`);
       }
       const htmlContent = await response.text();
+      console.log(htmlContent);
       return htmlContent;
     } catch (error) {
       console.error(error);
-      return `<p>Error loading component: ${componentName}</p>`;
+      return `<p>Error loading component: ${this.componentName}</p>`;
     }
   }
 }

@@ -8,7 +8,7 @@
     <link component-styles rel="stylesheet" href="" />
     <script src="/index.js" type="module"></script>
   </head>
-  <body id="router-outlet" class="container">
+  <body class="container">
     <!-- could be the beginning transition? -->
 
     <nav class="nav">
@@ -18,16 +18,22 @@
       <a href="/contact" class="nav-link">Contact</a>
     </nav>
 
-    <main class="content">
-        <section>
-            <h1>Welcome to my Resume!</h1>
-            <p>
-                Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse ipsum reiciendis fugiat, cupiditate sapiente blanditiis quae dicta voluptates laborum possimus nostrum, modi eaque eos, qui molestias numquam quod accusamus magni unde facere! Corporis, iusto! In eveniet sint iusto, unde, quasi ducimus consequatur repudiandae suscipit similique nam fuga quaerat sunt enim!
-            </p>
-
-
-        </section>
-
+    <main id="router-outlet" class="content">
+      <!-- main will always contain the page contents of the html component -->
+      <section>
+        This should probably be an html 404 page
+        <h1>Welcome to my Resume!</h1>
+        <p>
+          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Esse ipsum
+          reiciendis fugiat, cupiditate sapiente blanditiis quae dicta
+          voluptates laborum possimus nostrum, modi eaque eos, qui molestias
+          numquam quod accusamus magni unde facere! Corporis, iusto! In eveniet
+          sint iusto, unde, quasi ducimus consequatur repudiandae suscipit
+          similique nam fuga quaerat sunt enim!
+        </p>
+      </section>
     </main>
+
+    <footer>this is my footer</footer>
   </body>
 </html>
