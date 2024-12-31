@@ -3,7 +3,6 @@
   "version": "0.1.0",
   "description": "Tim Radtke portfolio website backend",
   "private": true,
-  "type": "module",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon"

@@ -12,8 +12,10 @@ import { router } from "./router.js";
 
 export default class App {
   constructor() {
+    console.log("this runs");
     // define all base routes here, suburls will later be handled in respective modules
     // start routing
+    console.log("Hello Starting app", router);
   }
 }
 // start up the initial application

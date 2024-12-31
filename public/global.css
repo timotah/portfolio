@@ -4,24 +4,55 @@
   overflow: hidden;
 }
 
-.container {
-  display: grid;
-  height: 100vh;
-  margin: 0;
+/* utility classes */
 
-  grid-template-rows: auto 1fr;
-  grid-template-areas:
-    "header"
-    "main";
+/* always allow flex containers to be defined by the first utility classes, increases readability for me on the template when visualizing layout */
+.flex-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-/* across flexbox of all possible buttons */
-.nav {
-  /* background-color: green; */
-  grid-area: header;
+.flex-column {
+  display: flex;
+  flex-direction: column;
 }
 
-.content {
-  grid-area: main;
-  /* background-color: red; */
+.nav-section {
+  flex: 1;
+}
+
+.navigation {
+  flex: 1;
+  justify-content: space-between;
+  align-items: center;
+  background: black;
+}
+
+.main-section {
+  /* 2 parts, the 2 columned 1st row, and 2nd row initial timeline */
+  flex: 1;
+}
+
+.resume {
+  /* we want this section to take up 100% to allow for inner columns */
+  width: 100%;
+}
+
+.name-title {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.skills {
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.timeline {
+  justify-content: center;
 }
