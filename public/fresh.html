@@ -6,7 +6,7 @@
     <link rel="stylesheet" href="global.css" />
     <title>timotah</title>
   </head>
-  <body>
+  <body class="flex-column">
     <header class="flex-row nav-section">
       <nav class="flex-row navigation">
         <!-- right now I am rewriting the css that i did in the browser, ss in my desktop -->
@@ -20,8 +20,11 @@
     <!-- contains all resume info and timeline -->
     <main class="flex-column main-section">
       <section class="flex-row resume">
-        <article class="flex-column name-title">Tim Radtke, Software Engineer</article>
-        <article class="flex-column skills">Skills: Expert Smartass</article>
+        <article class="col-tile">
+          <!-- actual square of information here -->
+          <div>Tim Radtke, Professional Badass</div>
+        </article>
+        <article class="col-tile">Skills: Expert Smartass</article>
       </section>
       <section class="flex-row timeline"><div>timeline portion</div></section>
     </main>
