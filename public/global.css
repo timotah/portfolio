@@ -1,6 +1,8 @@
 @import url(node_modules/@fortawesome/fontawesome-free/css/all.min.css);
 
-/* always allow flex containers to be defined by the first utility classes, increases readability for me on the template when visualizing layout */
+/* rule of thumb - longer than the header - too much nesting*/
+
+/* ==================== UTILITY CSS ===================== */
 .flex-row {
   display: flex;
   flex-direction: row;
@@ -11,7 +13,10 @@
   flex-direction: column;
 }
 
-/* general layout */
+/* ==================== LAYOUT CSS ====================== */
+/* these containers will determine initial page load viewport */
+/* all sub containers will be nested layout wise */
+
 body {
   margin: 0;
   padding: 0;
@@ -22,41 +27,41 @@ body {
 
 header {
   flex-shrink: 0; /* don't allow header to shrink */
+
+  & nav {
+    background: red;
+  }
+
+  .navigation {
+    flex: 1;
+    justify-content: space-between;
+    align-items: center;
+    background: lightgray;
+  }
 }
 
 main {
-  flex: 1; /* allow main to take up all available space */
+  /* allow main to take up all available space */
+  flex: 1;
+
+  .resume {
+    /* we want this section to take up 100% to allow for inner columns */
+    width: 100%;
+    justify-content: space-around;
+    flex: 4; /* 80% space of main */
+  }
+
+  .col-tile {
+    justify-content: center;
+    background-color: white;
+  }
+
+  .timeline {
+    justify-content: center;
+    flex: 1; /* 20% space of main */
+  }
 }
 
 footer {
   flex-shrink: 0; /* don't allow footer to shrink */
-}
-
-/* utility classes */
-
-.nav-section {
-}
-
-.navigation {
-  flex: 1;
-  justify-content: space-between;
-  align-items: center;
-  background: lightgray;
-}
-
-.resume {
-  /* we want this section to take up 100% to allow for inner columns */
-  width: 100%;
-  justify-content: space-around;
-  flex: 4; /* 80% space of main */
-}
-
-.col-tile {
-  justify-content: center;
-  background-color: white;
-}
-
-.timeline {
-  justify-content: center;
-  flex: 1; /* 20% space of main */
 }
