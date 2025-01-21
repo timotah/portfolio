@@ -1,5 +1,5 @@
 {
   "watch": ["server.js", "public/**/*"],
-  "ext": "js,html,css",
+  "ext": "js,html,css,json",
   "exec": "node server.js"
 }
