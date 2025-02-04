@@ -31,7 +31,7 @@ footer will not be taking any vh for now, as it will be absolute - taskbar undec
 
 # Jan 20th 2025
 
-- do not expand height for everything, have a preset limit on the size of things, and then shrink for mobile
+- do not expand height for everything, have a preset limit on the size of things, and then shrink for mobile for horizontal
 - ensure to have cool transitions and everything, have a written out timeline as well - don't overwhelm people with unfamiliar features
 - the side by side approach is cool, but not necessary, have one top bar with the description
 
