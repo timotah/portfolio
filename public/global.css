@@ -8,8 +8,8 @@
   --light-blue: #d1e8e2;
 
   /* other candidate */
+  
 }
-
 /* rule of thumb - longer than the header - too much nesting*/
 
 /* ==================== UTILITY CSS ===================== */
@@ -50,32 +50,67 @@ header {
 }
 
 main {
-  /* */
   display: flex;
   flex: 1;
+  background: var(--light-tan); /* Set tan background */
+  justify-content: center;
+  align-items: center;
+  flex-direction: column; /* Ensure vertical alignment */
 
   .resume {
-    /* we want this section to take up 100% to allow for inner columns */
     width: 100%;
-    flex: 4; /* 80% space of main */
+    flex: 4;
     justify-content: center;
     gap: 10rem;
     align-items: center;
   }
 
-  .col-tile {
-    justify-content: center;
-    background-color: white;
-    height: 20dvw;
-    width: 40dvw;
-    border-radius: 5px;
-    color: black;
+  .intro-section {
+    background: var(--light-blue); /* Set blue background */
+    border-radius: 15px;
+    padding: 2rem;
+    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    color: white; /* Set text color to white */
   }
 
-  .timeline {
-    justify-content: center;
-    flex: 1; /* 20% space of main */
+  .intro-section h1 {
+    color: red; /* Set header color to red */
+  }
+
+  .intro-section p {
+    color: white; /* Ensure paragraph text is white */
+  }
+
+  .selectable-sections {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 1rem;
+  }
+
+  .selectable-sections div {
+    background: var(--light-teal);
+    padding: 1rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+
+  .selectable-sections div:hover {
+    background: var(--dark-teal);
+  }
+
+  .scroll-indicator {
+    margin-top: 2rem;
+    font-size: 1rem;
     color: white;
+    text-align: center;
+  }
+
+  .scroll-indicator .down-arrow {
+    display: block;
+    margin-top: 0.5rem;
+    font-size: 2rem;
   }
 }
 
