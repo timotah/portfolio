@@ -10,7 +10,7 @@ const app = express();
 app.use(express.static(path.join(__dirname, "/public")));
 
 app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "/public/fresh.html"));
+  res.sendFile(path.join(__dirname, "/public/index.html"));
 });
 
 // Start the server and listen on the specified port
