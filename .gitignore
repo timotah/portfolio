@@ -1,3 +1,5 @@
 node_modules
 portfolio-docs/.obsidian
 .DS_Store
+.opencode
+.specify

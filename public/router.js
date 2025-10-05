@@ -68,4 +68,28 @@ class Router {
   }
 }
 
+const routerOutlet = document.getElementById("router-outlet") || document.querySelector("main");
+
+function interceptNavLinks() {
+  document.querySelectorAll('nav a').forEach(link => {
+    link.addEventListener('click', function(e) {
+      // Only intercept if JS is enabled and link is internal
+      if (link.hostname === window.location.hostname && link.getAttribute('href').startsWith('/')) {
+        e.preventDefault();
+        router.navigateTo(link.getAttribute('href'));
+        // Accessibility: move focus to main content
+        routerOutlet.setAttribute('tabindex', '-1');
+        routerOutlet.focus();
+      }
+    });
+  });
+}
+
+window.addEventListener('DOMContentLoaded', interceptNavLinks);
+
+// ARIA live region for main content
+if (routerOutlet) {
+  routerOutlet.setAttribute('aria-live', 'polite');
+}
+
 export const router = new Router(routes);

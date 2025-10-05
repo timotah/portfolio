@@ -36,22 +36,22 @@ main {
   padding: 2rem;
 }
 
-section[aria-label="Contact Methods"] {
+section[aria-label="Learning Items"] {
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
   padding: 2rem;
 }
 
-#contact-list {
+#learning-list {
   padding-left: 1.2em;
 }
 
-#contact-list li {
+#learning-list li {
   margin-bottom: 1.2em;
 }
 
-#contact-empty {
+#learning-empty {
   color: #c00;
   font-weight: bold;
 }

@@ -21,10 +21,65 @@ i:hover {
 
 body {
   margin: 0;
-  /* background-color: gray; */
+  background-color: #f8f9fa;
+  color: #222;
   height: 100vh;
 }
 
-.content {
+header {
+  background: #222;
+  color: #fff;
+  padding: 1rem 2rem;
   display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+header h1, header h2 {
+  margin: 0.2em 0;
+}
+
+nav ul {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  gap: 1rem;
+}
+
+nav a {
+  color: var(--console-green);
+  text-decoration: none;
+  font-weight: bold;
+  padding: 0.2em 0.5em;
+  border-radius: 4px;
+}
+
+nav a:focus, nav a:hover {
+  background: #333;
+  color: #fff;
+  outline: 2px solid var(--console-green);
+}
+
+main {
+  padding: 2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+section {
+  margin-bottom: 2rem;
+}
+
+ul {
+  padding-left: 1.2em;
+}
+
+@media (max-width: 600px) {
+  header, main {
+    padding: 1rem;
+  }
+  nav ul {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
 }
