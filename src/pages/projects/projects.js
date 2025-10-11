@@ -5,7 +5,6 @@ import { projects } from "../../js/projects.js";
 export default class Projects extends BaseComponent {
   constructor(router) {
     super("projects", router);
-    console.log("Projects is up and running!");
     this.renderProjects();
   }
 

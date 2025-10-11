@@ -9,7 +9,13 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "dev:backend": "nodemon"
+    "dev:backend": "nodemon",
+    "test": "mocha tests/**/*.test.js",
+    "test:contract": "mocha tests/contract/*.test.js",
+    "test:integration": "mocha tests/integration/*.test.js",
+    "test:unit": "mocha tests/unit/*.test.js",
+    "check:bundle-size": "node scripts/check-bundle-size.cjs",
+    "build:check": "npm run build && npm run check:bundle-size"
   },
   "repository": {
     "type": "git",
@@ -23,6 +29,7 @@
   "homepage": "https://github.com/timradtke22/portfolio#readme",
   "dependencies": {
     "express": "^4.21.0",
+    "glob": "^11.0.3",
     "vite": "^7.1.9"
   },
   "engines": {
@@ -31,8 +38,12 @@
   "devDependencies": {
     "@eslint/js": "^9.16.0",
     "browser-sync": "^3.0.2",
+    "chai": "^6.2.0",
     "eslint": "^9.16.0",
     "globals": "^15.13.0",
-    "nodemon": "^3.1.10"
+    "jsdom": "^27.0.0",
+    "mocha": "^11.7.4",
+    "nodemon": "^3.1.10",
+    "terser": "^5.44.0"
   }
 }

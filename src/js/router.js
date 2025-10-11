@@ -1,49 +1,114 @@
 "use strict";
 
-/**
- * @description add in all route to new html pages here, node watch test
- *
- * TODO:
- * 1. Need to have suburls not to error out the page
- */
+// Get templates using Vite's import.meta.glob (only in browser environment)  
+const templates = (typeof globalThis !== 'undefined' && import.meta && import.meta.glob)
+  ? {
+      ...import.meta.glob("../pages/**/*.html", {
+        query: "?raw", 
+        import: "default",
+      }),
+      ...import.meta.glob("../404.html", {
+        query: "?raw", 
+        import: "default",
+      })
+    }
+  : {};
 
-// Vite template glob import
-const templates = import.meta.glob("/pages/**/*.html", {
-  query: "?raw",
-  import: "default",
-});
+// Get router outlet element dynamically
+function getRouterOutlet() {
+  if (typeof document === 'undefined') return null;
+  return document.getElementById("router-outlet");
+}
 
 class Router {
   routes;
+  currentRoute = "/";  // Initialize to root path
+  currentComponent = null;
   componentCache = {};
   htmlCache = {};
 
   constructor(routes) {
     this.routes = routes;
-    // this._loadInitialRoute();
-    window.addEventListener("popstate", () => {
-      this._loadRoute(window.location.pathname);
-    });
+    // Only set up popstate listener in browser environment
+    if (typeof window !== 'undefined') {
+      window.addEventListener("popstate", () => {
+        this._loadRoute(window.location.pathname);
+      });
+    }
   }
 
-  // _loadInitialRoute() {
-  //   const pathName = window.location.pathname;
-  //   this._loadRoute(pathName);
-  // }
-
   async _loadRoute(pathName) {
-    console.log(`Loading route for ${pathName}`);
-    history.pushState({}, "this works", pathName);
+    this.currentRoute = pathName;
+    // Only manipulate history in browser environment
+    if (typeof window !== 'undefined' && window.history) {
+      history.pushState({}, "this works", pathName);
+    }
 
-    const routerOutlet = document.getElementById("router-outlet");
-    // Load HTML template using Vite's import.meta.glob
-    const html = await loadTemplate(pathName);
-    console.log("Loaded HTML:", html);
-    routerOutlet.innerHTML = html;
+    try {
+      const matchingRoute = this.routes?.find(route => route.path === pathName);
+      
+      if (matchingRoute && matchingRoute.component && typeof matchingRoute.component === 'function') {
+        await this._loadComponentRoute(matchingRoute);
+      } else {
+        await this._loadTemplateRoute(pathName);
+      }
+    } catch (error) {
+      console.error(`Route error ${pathName}:`, error);
+      this._showErrorPage(pathName, error);
+    }
+  }
+
+  async _loadComponentRoute(route) {
+    try {
+      // Clean up previous component
+      if (this.currentComponent && typeof this.currentComponent.destroy === 'function') {
+        this.currentComponent.destroy();
+      }
+
+      // Load new component
+      this.currentComponent = this.loadComponent(route);
+      await this.currentComponent.activate();
+    } catch (error) {
+      console.error(`Error loading component route ${route.path}:`, error);
+      this._showErrorPage(route.path, error);
+      throw error; // Re-throw to maintain error chain
+    }
+  }
+
+  async _loadTemplateRoute(pathName) {
+    try {
+      const routerOutlet = getRouterOutlet();
+      if (!routerOutlet) {
+        throw new Error('Router outlet not found in DOM');
+      }
+
+      const html = await loadTemplate(pathName);
+      
+      // Extract content from the main element of the loaded HTML
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, 'text/html');
+      const mainElement = doc.querySelector('main');
+      
+      if (mainElement) {
+        // Extract just the innerHTML of the main element
+        routerOutlet.innerHTML = mainElement.innerHTML;
+      } else {
+        // Fallback: use the entire HTML if no main element found
+        routerOutlet.innerHTML = html;
+      }
+    } catch (error) {
+      console.error(`Error loading template route ${pathName}:`, error);
+      this._showErrorPage(pathName, error);
+      throw error; // Re-throw to maintain error chain
+    }
   }
 
   navigateTo(pathName) {
-    this._loadRoute(pathName);
+    return this._loadRoute(pathName);
+  }
+
+  getCurrentRoute() {
+    return this.currentRoute;
   }
 
   _matchUrlToRoute(urlSegment) {
@@ -54,8 +119,6 @@ class Router {
     return matchedRoute;
   }
 
-  // components called via the router will only need single instance use
-  // the only components that should be able to exist multiple times are those that are page specific
   loadComponent(route) {
     const path = route.path;
 
@@ -64,60 +127,101 @@ class Router {
       return this.componentCache[path];
     }
 
-    // Create and cache new instance if not found
-    const component = new route.component();
-    this.componentCache[path] = component;
-    return component;
+    try {
+      // Create new component instance
+      const ComponentClass = route.component;
+      if (typeof ComponentClass !== 'function') {
+        throw new Error(`Invalid component class for route ${path}`);
+      }
+
+      const componentInstance = new ComponentClass(route.componentName || path.slice(1));
+      this.componentCache[path] = componentInstance;
+      return componentInstance;
+    } catch (error) {
+      console.error(`Error creating component for route ${path}:`, error);
+      throw error;
+    }
+  }
+
+  _showErrorPage(pathName, error) {
+    const outlet = getRouterOutlet();
+    if (outlet) {
+      outlet.innerHTML = `
+        <div class="router-error-state" role="alert" aria-live="assertive">
+          <h1>Page Not Found</h1>
+          <p>Sorry, we couldn't load the page "${pathName}".</p>
+          <details>
+            <summary>Technical Details</summary>
+            <pre>${error.message}</pre>
+          </details>
+          <p>
+            <a href="/" class="error-home-link">Go to Home</a>
+            <button onclick="location.reload()" class="error-retry-button">Try Again</button>
+          </p>
+        </div>
+      `;
+    }
   }
 }
 
-const routerOutlet =
-  document.getElementById("router-outlet") || document.querySelector("main");
-
-// Helper to load HTML template by route
-async function loadTemplate(routePath) {
-  // Normalize routePath to match template keys
-  let key = `/pages${routePath}${routePath}.html`;
-  console.log(`Attempting to load template for key: ${key}`);
-
-  if (!(key in templates)) {
-    // fallback to 404
-    key = "/404.html";
+export async function loadTemplate(key) {
+  try {
+    // Use mockTemplates in test environment, otherwise use real templates
+    const sourceTemplates = globalThis.mockTemplates || templates;
+    const activeTemplates = Object.keys(sourceTemplates);
+    
+    // First try exact path match - look for folder name in path
+    const exactMatch = activeTemplates.find(template => {
+      // Extract folder name from key (e.g., '/aboutme' -> 'aboutme')
+      const folderName = key.replace('/', '');
+      // Match pattern like '../pages/aboutme/aboutme.html' for key '/aboutme'
+      return template.includes(`/pages/${folderName}/${folderName}.html`);
+    });
+    
+    if (exactMatch) {
+      return await sourceTemplates[exactMatch]();
+    }
+    
+    // Then try 404 fallback
+    const notFoundTemplate = activeTemplates.find(template => template.includes("404.html"));
+    if (notFoundTemplate) {
+      return await sourceTemplates[notFoundTemplate]();
+    }
+    
+    // Final fallback
+    throw new Error(`Template not found for path: ${key}`);
+  } catch (error) {
+    console.error(`Error loading template for ${key}:`, error);
+    throw new Error(`Failed to load template for path: ${key}. ${error.message}`);
   }
-  console.log(`Loading template for ${key}`);
-  console.log(templates);
-  return await templates[key]();
 }
 
 function interceptNavLinks() {
-  document.querySelectorAll('a[href^="/"]').forEach((link) => {
-    link.addEventListener("click", function (e) {
-      // Only intercept if JS is enabled and link is internal
-      if (
-        link.hostname === window.location.hostname &&
-        !link.hasAttribute("target") &&
-        !e.ctrlKey &&
-        !e.metaKey &&
-        !e.shiftKey &&
-        !e.altKey
-      ) {
-        e.preventDefault();
-        router.navigateTo(link.getAttribute("href"));
-        // Accessibility: move focus to main content
-        if (routerOutlet) {
-          routerOutlet.setAttribute("tabindex", "-1");
-          routerOutlet.focus();
-        }
+  if (typeof document === 'undefined') return;
+  
+  document.addEventListener("click", function (e) {
+    if (e.target.tagName === "A" && e.target.href.startsWith(window.location.origin)) {
+      e.preventDefault();
+      const path = new URL(e.target.href).pathname;
+      
+      if (router) {
+        router.navigateTo(path);
       }
-    });
+    }
   });
 }
 
-window.addEventListener("DOMContentLoaded", interceptNavLinks);
-
-// ARIA live region for main content
-if (routerOutlet) {
-  routerOutlet.setAttribute("aria-live", "polite");
+// Only set up DOM event listeners in browser environment
+if (typeof window !== 'undefined') {
+  window.addEventListener("DOMContentLoaded", interceptNavLinks);
+  
+  // ARIA live region for main content
+  window.addEventListener("DOMContentLoaded", () => {
+    const routerOutlet = getRouterOutlet();
+    if (routerOutlet) {
+      routerOutlet.setAttribute("aria-live", "polite");
+    }
+  });
 }
 
 // Global router instance
@@ -128,7 +232,7 @@ export function initRouter(routes) {
   if (!router) {
     router = new Router(routes);
   }
-  console.log("Router initalized");
+  
   return router;
 }
 

@@ -7,6 +7,9 @@
   --text: #222;
   --header-bg: #222;
   --header-text: #fff;
+  --error-bg: #fee;
+  --error-border: #f99;
+  --error-text: #833;
 }
 
 * {
@@ -34,8 +37,77 @@ ul {
   padding-left: 1.2em;
 }
 
+/* Error styling */
+.error-state, .router-error-state {
+  background: var(--error-bg);
+  border: 1px solid var(--error-border);
+  border-radius: 8px;
+  color: var(--error-text);
+  margin: 2rem auto;
+  max-width: 600px;
+  padding: 2rem;
+  text-align: center;
+}
+
+.error-state h1, .error-state h2,
+.router-error-state h1, .router-error-state h2 {
+  color: var(--error-text);
+  margin-top: 0;
+}
+
+.error-state details,
+.router-error-state details {
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 4px;
+  margin: 1rem 0;
+  padding: 0.5rem;
+  text-align: left;
+}
+
+.error-state summary,
+.router-error-state summary {
+  cursor: pointer;
+  font-weight: bold;
+  padding: 0.5rem;
+}
+
+.error-state pre,
+.router-error-state pre {
+  background: #fff;
+  border-radius: 4px;
+  color: #666;
+  font-size: 0.9em;
+  overflow-x: auto;
+  padding: 1rem;
+  white-space: pre-wrap;
+}
+
+.error-home-link, .error-retry-button {
+  background: var(--header-bg);
+  border: none;
+  border-radius: 4px;
+  color: var(--header-text);
+  cursor: pointer;
+  display: inline-block;
+  margin: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.error-home-link:hover, .error-retry-button:hover,
+.error-home-link:focus, .error-retry-button:focus {
+  background: #444;
+  outline: var(--focus-outline);
+}
+
 @media (max-width: 600px) {
   header, main {
+    padding: 1rem;
+  }
+  
+  .error-state, .router-error-state {
+    margin: 1rem;
     padding: 1rem;
   }
 }

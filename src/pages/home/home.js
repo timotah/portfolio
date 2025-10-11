@@ -7,7 +7,6 @@ export default class Home extends BaseComponent {
   constructor() {
     const componentName = "home";
     super(componentName);
-    console.log(`${componentName} triggered`);
     this.renderOwnerInfo();
   }
 

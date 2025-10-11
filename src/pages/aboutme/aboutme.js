@@ -5,7 +5,6 @@ import { portfolioOwner } from "../../js/portfolioOwner.js";
 export default class Resume extends BaseComponent {
   constructor(router) {
     super("resume", router);
-    console.log("Resume is up and running!");
     this.renderOwnerInfo();
     this.renderResume();
   }

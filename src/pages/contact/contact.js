@@ -5,7 +5,6 @@ import { contactMethods } from "../../js/contactMethods.js";
 export default class ContactMe extends BaseComponent {
   constructor(router) {
     super("contactme", router);
-    console.log("Contacts is up and running!");
     this.renderContacts();
   }
 

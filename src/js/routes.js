@@ -1,13 +1,12 @@
 "use strict";
 
-import Home from "../pages/home/home.js";
-import Projects from "../pages/projects/projects.js";
-import Resume from "../pages/aboutme/aboutme.js";
-import Contact from "../pages/contact/contact.js";
-
+// Define routes for the application
+// Each route can have a path and optional component class
 export const routes = [
-  { path: "/", component: Home },
-  { path: "/projects", component: Projects },
-  { path: "/resume", component: Resume },
-  { path: "/contact", component: Contact },
+  { path: '/', component: null },
+  { path: '/home', component: null },
+  { path: '/projects', component: null },
+  { path: '/contact', component: null },
+  { path: '/aboutme', component: null },
+  { path: '/learning', component: null }
 ];

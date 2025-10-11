@@ -12,13 +12,3 @@ export const portfolioOwner = {
     { type: "Twitter", value: "@timradtke" }
   ]
 };
-
-// User model for routing feature
-export const user = {
-  deviceCapabilities: {
-    jsEnabled: typeof window !== 'undefined' ? !!window.navigator && !!window.document : false,
-    screenReader: false, // Placeholder, should be detected via accessibility API if available
-    keyboard: true // Assume keyboard available; can be refined
-  },
-  navigationHistory: [] // Will be populated by router logic
-};
