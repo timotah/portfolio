@@ -1,0 +1,48 @@
+const e=`<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tim Radtke | Portfolio Home</title>
+  <link rel="stylesheet" href="/pages/home/home.css">
+  <link rel="stylesheet" href="/global.css">
+</head>
+<body>
+  <header aria-label="Site Header">
+    <h1>Hi, I'm Tim Radtke</h1>
+    <h2>Fullstack Developer</h2>
+    <nav aria-label="Main Navigation">
+      <ul>
+<li><a href="/">Home</a></li>
+<li><a href="/aboutme">About Me</a></li>
+<li><a href="/projects">Projects</a></li>
+<li><a href="/learning">Current Learning</a></li>
+<li><a href="/contact">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main id="main-content" aria-live="polite">
+    <section aria-label="Portfolio Owner Info">
+      <h2>Welcome!</h2>
+      <p>
+        I’m Tim Radtke, a software engineer with 10+ years experience. Connect with me:
+      </p>
+      <ul>
+        <li><a href="mailto:tim@radtke.dev">Email</a></li>
+        <li><a href="https://github.com/timradtke" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://linkedin.com/in/timradtke" target="_blank" rel="noopener">LinkedIn</a></li>
+        <li><a href="https://twitter.com/timradtke" target="_blank" rel="noopener">Twitter</a></li>
+      </ul>
+    </section>
+    <section aria-label="About This Site">
+      <h2>About This Portfolio</h2>
+      <p>
+        This site is built with vanilla HTML, JS, and CSS. It’s fast, accessible, and easy to navigate.
+      </p>
+    </section>
+  </main>
+  <script type="module" src="/pages/home/home.js"><\/script>
+<script type="module" src="/js/router.js"><\/script>
+</body>
+</html>
+`;export{e as default};
