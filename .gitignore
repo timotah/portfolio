@@ -3,3 +3,4 @@ portfolio-docs/.obsidian
 .DS_Store
 .opencode
 .specify
+dist/
