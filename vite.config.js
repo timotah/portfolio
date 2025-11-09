@@ -4,6 +4,7 @@ import path from 'path';
 export default defineConfig({
   root: 'src',
   publicDir: '../static',
+  assetsInclude: ['**/*.html'],
   build: {
     outDir: '../dist',
     minify: 'terser',

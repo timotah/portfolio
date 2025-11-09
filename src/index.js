@@ -1,12 +1,12 @@
 "use strict";
 
 import { initRouter } from "./js/router.js";
-import { routes } from "./js/routes.js";
+// import { routes} from "./js/routes.js";
 import { portfolioOwner } from "./js/portfolioOwner.js";
 
 export default class App {
   constructor() {
-    initRouter(routes);
+    initRouter();
     this.renderOwnerInfo();
   }
 

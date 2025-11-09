@@ -2,9 +2,9 @@
 import BaseComponent from "../../js/BaseComponent.js";
 import { portfolioOwner } from "../../js/portfolioOwner.js";
 
-export default class Resume extends BaseComponent {
+export default class AboutMe extends BaseComponent {
   constructor(router) {
-    super("resume", router);
+    super("AboutMe", router);
     this.renderOwnerInfo();
     this.renderResume();
   }
