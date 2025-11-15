@@ -1,14 +1,14 @@
 "use strict";
 
 const components = import.meta.glob("/pages/**/*.js");
-
-// Use the working approach without ?raw
-const templates = import.meta.glob("/pages/**/*.html", { query: "?raw", eager: true });
-console.log("Templates loaded:", Object.keys(templates));
-
-// For CSS, let's also try without ?raw first
-const styles = import.meta.glob("/pages/**/*.css", { query: "?raw", eager: true });
-console.log("Styles loaded:", Object.keys(styles));
+const templates = import.meta.glob("/pages/**/*.html", {
+  query: "?raw",
+  eager: true,
+});
+const styles = import.meta.glob("/pages/**/*.css", {
+  query: "?raw",
+  eager: true,
+});
 
 // Get router outlet element dynamically
 function getRouterOutlet() {
@@ -20,69 +20,36 @@ class Router {
   routes;
   currentRoute = "/";
   currentComponent = null;
-  componentCache = {};
-  htmlCache = {};
+  originalPageHtml = null;
 
   constructor() {
-    // this.routes = routes;
     // Only set up popstate listener in browser environment
+    const routerOutlet = getRouterOutlet();
+    if (routerOutlet) {
+      // we always want to take the original page content before we navigate
+      this.originalPageHtml = routerOutlet.innerHTML;
+    }
+
     if (typeof window !== "undefined") {
       window.addEventListener("popstate", () => {
-        this._loadRoute(window.location.pathname);
+        this._loadRoute(window.location.pathname, true);
       });
     }
-    console.log("Templates in constructor:", templates);
-    
-    // Debug: Check after a small delay
-    setTimeout(() => {
-      console.log("Templates after timeout:", templates);
-      console.log("Templates keys:", Object.keys(templates));
-    }, 100);
-    // lets form the routes based off the pages we have here
-    this.routes = Object.entries(templates).map((templateEntry) => {
-      const templatePath = templateEntry[0];
-      const template = templateEntry[1];
-      // Extract the route path from the template path
-      // e.g., '/pages/aboutme/aboutme.html' -> '/aboutme'
-      const match = templatePath.match(/\/pages\/([^\/]+)\/\1\.html$/);
-      if (match) {
-        const routePath = `/${match[1]}`;
-        // Check if a corresponding component exists
-        const componentPath = `/components/${match[1]}/${match[1]}.js`;
-        const component = components[componentPath];
 
-        // check if a corresponding style exists
-        const stylePath = `/styles/${match[1]}.css`;
-        const style = document.createElement("link");
-        style.rel = "stylesheet";
-        style.href = stylePath;
-
-        return { path: routePath, template, component, style };
-      }
-    });
+    // intiial route
+    this.navigateTo(window.location.pathname);
   }
 
-  async _loadRoute(pathName) {
-    this.currentRoute = pathName;
+  async _loadRoute(pathName, fromPopState = false) {
     // Only manipulate history in browser environment
-    if (typeof window !== "undefined" && window.history) {
+    if (typeof window !== "undefined" && window.history && !fromPopState) {
       history.pushState({}, "", pathName);
     }
 
-    try {
-      const matchingRoute = this.routes?.find(
-        (route) => route.path === pathName,
-      );
+    this.currentRoute = pathName;
 
-      if (
-        matchingRoute &&
-        matchingRoute.component &&
-        typeof matchingRoute.component === "function"
-      ) {
-        await this._loadComponentRoute(matchingRoute);
-      } else {
-        await this._loadTemplateRoute(pathName);
-      }
+    try {
+      await this._loadTemplateRoute(pathName);
     } catch (error) {
       console.error(`Route error ${pathName}:`, error);
       this._showErrorPage(pathName, error);
@@ -111,12 +78,14 @@ class Router {
 
   async _loadTemplateRoute(pathName) {
     try {
-      const routerOutlet = getRouterOutlet();
-      if (!routerOutlet) {
-        throw new Error("Router outlet not found in DOM");
+      if (!this.routerOutlet) {
+        this.routerOutlet = getRouterOutlet();
+        if (!this.routerOutlet) {
+          throw new Error("Router outlet not found in DOM");
+        }
       }
 
-      const html = await loadTemplate(pathName);
+      const html = await this.loadTemplate(pathName);
       console.log(`Loaded template for ${pathName}:`, html);
 
       // Extract content from the main element of the loaded HTML
@@ -126,10 +95,10 @@ class Router {
 
       if (mainElement) {
         // Extract just the innerHTML of the main element
-        routerOutlet.innerHTML = mainElement.innerHTML;
+        this.routerOutlet.innerHTML = mainElement.innerHTML;
       } else {
         // Fallback: use the entire HTML if no main element found
-        routerOutlet.innerHTML = html;
+        this.routerOutlet.innerHTML = html;
       }
     } catch (error) {
       console.error(`Error loading template route ${pathName}:`, error);
@@ -142,8 +111,57 @@ class Router {
     return this._loadRoute(pathName);
   }
 
-  getCurrentRoute() {
-    return this.currentRoute;
+  loadTemplate(key) {
+    console.log(`Loading template for key: ${key}`);
+    try {
+      const sourceTemplates = templates;
+      console.log("Available templates:", sourceTemplates);
+      const activeTemplates = Object.keys(sourceTemplates);
+
+      // finding in existing templates stored in string map
+      const exactMatch = activeTemplates.find((template) => {
+        const folderName = key.replace("/", "");
+        return template.includes(`/pages/${folderName}/${folderName}.html`);
+      });
+
+      if (exactMatch) {
+        console.log("Template module:", sourceTemplates[exactMatch]);
+        const templateModule = sourceTemplates[exactMatch];
+        const html = templateModule.default;
+        console.log("html: ", html);
+
+        // Fetch the HTML content
+        return html;
+      }
+
+      // attempt to find in cache
+      if (key === "/") {
+        return this.originalPageHtml;
+      }
+      // const cacheTemplate = this.htmlCache[key];
+      // if (cacheTemplate) {
+      //   console.log("Found in cache:", cacheTemplate);
+      //   return cacheTemplate;
+      // }
+
+      console.log("No exact match, trying index.html fallback");
+
+      // Then try 404 fallback
+      // const notFoundTemplate = activeTemplates.find((template) =>
+      //   template.includes("404.html"),
+      // );
+      // if (notFoundTemplate) {
+      //   return await sourceTemplates[notFoundTemplate]();
+      // }
+
+      // Final fallback
+      throw new Error(`Template not found for path: ${key}`);
+    } catch (error) {
+      console.error(`Error loading template for ${key}:`, error);
+      throw new Error(
+        `Failed to load template for path: ${key}. ${error.message}`,
+      );
+    }
   }
 
   _matchUrlToRoute(urlSegment) {
@@ -201,56 +219,6 @@ class Router {
   }
 }
 
-export async function loadTemplate(key) {
-  try {
-    // Use mockTemplates in test environment, otherwise use real templates
-    const sourceTemplates = templates;
-    console.log("Available templates:", sourceTemplates);
-    const activeTemplates = Object.keys(sourceTemplates);
-
-    // First try exact path match - look for folder name in path
-    const exactMatch = activeTemplates.find((template) => {
-      console.log("Checking template:", template);
-      // Extract folder name from key (e.g., '/aboutme' -> 'aboutme')
-      const folderName = key.replace("/", "");
-      // Match pattern like '/pages/aboutme/aboutme.html' for key '/aboutme'
-      return template.includes(`/pages/${folderName}/${folderName}.html`);
-    });
-
-    console.log("Exact match found:", exactMatch);
-
-    if (exactMatch) {
-      console.log("Template module:", sourceTemplates[exactMatch]);
-      // Without ?raw, we get a module with a URL, so we need to fetch it
-      const templateModule = sourceTemplates[exactMatch];
-      const templateUrl = templateModule.default;
-      console.log("Template URL:", templateUrl);
-      
-      // Fetch the HTML content
-      const response = await fetch(templateUrl);
-      const html = await response.text();
-      return html;
-    }
-    console.log("No exact match, trying index.html fallback");
-
-    // Then try 404 fallback
-    const notFoundTemplate = activeTemplates.find((template) =>
-      template.includes("404.html"),
-    );
-    if (notFoundTemplate) {
-      return await sourceTemplates[notFoundTemplate]();
-    }
-
-    // Final fallback
-    throw new Error(`Template not found for path: ${key}`);
-  } catch (error) {
-    console.error(`Error loading template for ${key}:`, error);
-    throw new Error(
-      `Failed to load template for path: ${key}. ${error.message}`,
-    );
-  }
-}
-
 function interceptNavLinks() {
   if (typeof document === "undefined") return;
 
@@ -284,15 +252,10 @@ if (typeof window !== "undefined") {
 }
 
 // Global router instance
-let router = null;
+globalThis.router = null;
 
-// Initialize router with routes
-export function initRouter(routes) {
+export function initRouter() {
   if (!router) {
-    router = new Router(routes);
+    globalThis.router = new Router();
   }
-
-  return router;
 }
-
-export default Router;

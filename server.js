@@ -34,6 +34,7 @@ app.get("*", (req, res) => {
   }
   
   // Check if this is a request for a known route
+  console.log(`Received request for path: ${req.path}`);
   const routeName = staticRoutes[req.path];
   
   if (routeName) {
@@ -49,6 +50,7 @@ app.get("*", (req, res) => {
       
       // Check if static HTML exists
       try {
+        console.log(`Serving static HTML for route: ${routeName}`);
         res.sendFile(staticHtmlPath);
         return;
       } catch (error) {
@@ -59,6 +61,7 @@ app.get("*", (req, res) => {
   }
   
   // Default: serve SPA index.html (JavaScript enabled or unknown route)
+  console.log(`Serving SPA index.html for path: ${req.path}`);
   res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
