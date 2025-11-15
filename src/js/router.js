@@ -40,6 +40,17 @@ class Router {
     this.navigateTo(window.location.pathname);
   }
 
+  updateActiveNavLink() {
+    if (typeof document === "undefined") return;
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => link.classList.remove('active'));
+    const currentLink = document.querySelector(`nav a[href="${this.currentRoute}"]`);
+    if (currentLink) {
+      currentLink.classList.add('active');
+      currentLink.focus();
+    }
+  }
+
   async _loadRoute(pathName, fromPopState = false) {
     // Only manipulate history in browser environment
     if (typeof window !== "undefined" && window.history && !fromPopState) {
@@ -47,6 +58,7 @@ class Router {
     }
 
     this.currentRoute = pathName;
+    this.updateActiveNavLink();
 
     try {
       await this._loadTemplateRoute(pathName);
