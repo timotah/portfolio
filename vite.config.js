@@ -23,8 +23,24 @@ export default defineConfig({
       },
     },
     rollupOptions: {
+      input: {
+        index: 'index.html',
+        projects: 'pages/projects/projects.html',
+        aboutme: 'pages/aboutme/aboutme.html',
+        contact: 'pages/contact/contact.html',
+        learning: 'pages/learning/learning.html',
+      },
       output: {
-        manualChunks: undefined,
+        manualChunks: (id) => {
+          // Vendor chunk for node_modules
+          if (id.includes('node_modules')) {
+            return 'vendor';
+          }
+          // App chunk for all your app code
+          if (id.includes('src/js/') || id.includes('src/pages/')) {
+            return 'app';
+          }
+        },
       },
     },
     chunkSizeWarningLimit: 14,
