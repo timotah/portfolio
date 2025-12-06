@@ -11,4 +11,5 @@ export const portfolioOwner = {
     { type: "Email", value: "tim@radtke.dev" },
     { type: "Twitter", value: "@timradtke" }
   ]
+  myStory: "I am a software engineer with 5 years of experience working as a fullstack developer at AMOpportunities!"
 };
