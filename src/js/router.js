@@ -89,6 +89,7 @@ class Router {
   }
 
   async _loadTemplateRoute(pathName) {
+    console.log(`Loading template route: ${pathName}`);
     try {
       if (!this.routerOutlet) {
         this.routerOutlet = getRouterOutlet();
@@ -96,6 +97,10 @@ class Router {
           throw new Error("Router outlet not found in DOM");
         }
       }
+
+      // Load and inject stylesheets
+      await this.loadStyles(pathName);
+      console.log(`Styles loaded for ${pathName}`);
 
       const html = await this.loadTemplate(pathName);
       console.log(`Loaded template for ${pathName}:`, html);
@@ -108,14 +113,79 @@ class Router {
       if (mainElement) {
         // Extract just the innerHTML of the main element
         this.routerOutlet.innerHTML = mainElement.innerHTML;
+        console.log(`Main content injected for ${pathName}`);
+
+        // Load and execute any JavaScript files for this route
+        await this.loadScript(pathName);
+        console.log(`Script loaded for ${pathName}`);
       } else {
         // Fallback: use the entire HTML if no main element found
         this.routerOutlet.innerHTML = html;
+        console.log(`No main element found, using full HTML`);
       }
     } catch (error) {
       console.error(`Error loading template route ${pathName}:`, error);
       this._showErrorPage(pathName, error);
       throw error; // Re-throw to maintain error chain
+    }
+  }
+
+  async loadStyles(pathName) {
+    try {
+      const sourceStyles = styles;
+      const activeStyles = Object.keys(sourceStyles);
+
+      let folderName = pathName.replace("/", "");
+
+      // If loading root path, load grid styles
+      if (pathName === "/") {
+        folderName = "grid";
+      }
+
+      const exactMatch = activeStyles.find((style) => {
+        return style.includes(`/pages/${folderName}/${folderName}.css`);
+      });
+
+      if (exactMatch) {
+        const styleModule = sourceStyles[exactMatch];
+        const css = styleModule.default;
+
+        // Check if this style is already loaded
+        const existingStyle = document.getElementById(`page-style-${pathName}`);
+        if (!existingStyle) {
+          const styleElement = document.createElement("style");
+          styleElement.id = `page-style-${pathName}`;
+          styleElement.textContent = css;
+          document.head.appendChild(styleElement);
+        }
+      }
+    } catch (error) {
+      console.error(`Error loading styles for ${pathName}:`, error);
+    }
+  }
+
+  async loadScript(pathName) {
+    try {
+      const sourceComponents = components;
+      const activeComponents = Object.keys(sourceComponents);
+
+      let folderName = pathName.replace("/", "");
+
+      // If loading root path, load grid script
+      if (pathName === "/") {
+        folderName = "grid";
+      }
+
+      const exactMatch = activeComponents.find((component) => {
+        return component.includes(`/pages/${folderName}/${folderName}.js`);
+      });
+
+      if (exactMatch) {
+        // Load the component module
+        await sourceComponents[exactMatch]();
+      }
+    } catch (error) {
+      console.error(`Error loading script for ${pathName}:`, error);
     }
   }
 
@@ -148,6 +218,13 @@ class Router {
 
       // attempt to find in cache
       if (key === "/") {
+        // Load grid page as default home page
+        const gridTemplate = activeTemplates.find((template) =>
+          template.includes("/pages/grid/grid.html")
+        );
+        if (gridTemplate) {
+          return sourceTemplates[gridTemplate].default;
+        }
         return this.originalPageHtml;
       }
       // const cacheTemplate = this.htmlCache[key];
