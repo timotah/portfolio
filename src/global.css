@@ -1,4 +1,3 @@
-
 :root {
   --console-green: rgb(145, 237, 145);
   --focus-outline: 2px solid var(--console-green);
@@ -33,7 +32,8 @@ header {
   align-items: flex-start;
 }
 
-header h1, header h2 {
+header h1,
+header h2 {
   margin: 0.2em 0;
 }
 
@@ -45,7 +45,9 @@ nav a {
   border-radius: 4px;
 }
 
-nav a:focus, nav a:hover, nav a.active {
+nav a:focus,
+nav a:hover,
+nav a.active {
   background: #333;
   color: #fff;
   outline: 2px solid var(--console-green);
@@ -71,7 +73,8 @@ section {
 }
 
 /* Error styling */
-.error-state, .router-error-state {
+.error-state,
+.router-error-state {
   background: var(--error-bg);
   border: 1px solid var(--error-border);
   border-radius: 8px;
@@ -82,8 +85,10 @@ section {
   text-align: center;
 }
 
-.error-state h1, .error-state h2,
-.router-error-state h1, .router-error-state h2 {
+.error-state h1,
+.error-state h2,
+.router-error-state h1,
+.router-error-state h2 {
   color: var(--error-text);
   margin-top: 0;
 }
@@ -115,7 +120,8 @@ section {
   white-space: pre-wrap;
 }
 
-.error-home-link, .error-retry-button {
+.error-home-link,
+.error-retry-button {
   background: var(--header-bg);
   border: none;
   border-radius: 4px;
@@ -128,18 +134,22 @@ section {
   transition: background-color 0.2s;
 }
 
-.error-home-link:hover, .error-retry-button:hover,
-.error-home-link:focus, .error-retry-button:focus {
+.error-home-link:hover,
+.error-retry-button:hover,
+.error-home-link:focus,
+.error-retry-button:focus {
   background: #444;
   outline: var(--focus-outline);
 }
 
 @media (max-width: 600px) {
-  header, main {
+  header,
+  main {
     padding: 1rem;
   }
-  
-  .error-state, .router-error-state {
+
+  .error-state,
+  .router-error-state {
     margin: 1rem;
     padding: 1rem;
   }

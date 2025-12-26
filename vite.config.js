@@ -1,17 +1,22 @@
-import { defineConfig } from 'vite';
-import path from 'path';
+import { defineConfig } from "vite";
+import path from "path";
 
 export default defineConfig({
-  root: 'src',
-  publicDir: 'static',
+  root: "src",
+  publicDir: "static",
   build: {
-    outDir: 'dist',
-    minify: 'terser',
+    outDir: "dist",
+    minify: "terser",
     terserOptions: {
       compress: {
         drop_console: true,
         drop_debugger: true,
-        pure_funcs: ['console.log', 'console.info', 'console.debug', 'console.warn'],
+        pure_funcs: [
+          "console.log",
+          "console.info",
+          "console.debug",
+          "console.warn",
+        ],
         passes: 2,
       },
       mangle: {
@@ -23,11 +28,8 @@ export default defineConfig({
     },
     rollupOptions: {
       input: {
-        index: '/index.html',
-        projects: '/pages/projects/projects.html',
-        aboutme: '/pages/aboutme/aboutme.html',
-        contact: '/pages/contact/contact.html',
-        learning: '/pages/learning/learning.html',
+        index: "/index.html",
+        grid: "/pages/grid/grid.html",
       },
       output: {
         manualChunks: undefined,
@@ -36,6 +38,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 14,
   },
   server: {
-    open: true
-  }
+    open: true,
+  },
 });
