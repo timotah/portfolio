@@ -3,10 +3,9 @@ import path from 'path';
 
 export default defineConfig({
   root: 'src',
-  publicDir: '../static',
-  assetsInclude: ['**/*.html'],
+  publicDir: 'static',
   build: {
-    outDir: '../dist',
+    outDir: 'dist',
     minify: 'terser',
     terserOptions: {
       compress: {
@@ -23,6 +22,13 @@ export default defineConfig({
       },
     },
     rollupOptions: {
+      input: {
+        index: '/index.html',
+        projects: '/pages/projects/projects.html',
+        aboutme: '/pages/aboutme/aboutme.html',
+        contact: '/pages/contact/contact.html',
+        learning: '/pages/learning/learning.html',
+      },
       output: {
         manualChunks: undefined,
       },
@@ -30,6 +36,6 @@ export default defineConfig({
     chunkSizeWarningLimit: 14,
   },
   server: {
-    open: true,
-  },
+    open: true
+  }
 });
