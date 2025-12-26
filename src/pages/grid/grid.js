@@ -1,17 +1,17 @@
 "use strict";
 
 import { GridContainer } from '../../js/gridContainer.js';
-import { GridWidget } from '../../js/widget.js';
+import { GridWidget } from '../../js/gridWidget.js';
 
 
 
 const presets = {
   preset1: [
     { id: 'widget1', title: 'About Me', content: '<h3>About Me</h3><p>Fullstack Developer with 5 years experience</p>', col: 1, row: 1, colSpan: 4, rowSpan: 4 },
-    { id: 'widget2', title: 'Projects', content: '<h3>Projects</h3><p>Check out my latest work</p>', col: 5, row: 1, colSpan: 4, rowSpan: 4 },
-    { id: 'widget3', title: 'Contact', content: '<h3>Contact</h3><p>Get in touch!</p>', col: 9, row: 1, colSpan: 4, rowSpan: 4 },
-    { id: 'widget4', title: 'Skills', content: '<h3>Skills</h3><p>JavaScript, Node.js, React, Python</p>', col: 1, row: 5, colSpan: 6, rowSpan: 4 },
-    { id: 'widget5', title: 'Learning', content: '<h3>Current Learning</h3><p>Exploring new technologies</p>', col: 7, row: 5, colSpan: 6, rowSpan: 4 }
+    // { id: 'widget2', title: 'Projects', content: '<h3>Projects</h3><p>Check out my latest work</p>', col: 5, row: 1, colSpan: 4, rowSpan: 4 },
+    // { id: 'widget3', title: 'Contact', content: '<h3>Contact</h3><p>Get in touch!</p>', col: 9, row: 1, colSpan: 4, rowSpan: 4 },
+    // { id: 'widget4', title: 'Skills', content: '<h3>Skills</h3><p>JavaScript, Node.js, React, Python</p>', col: 1, row: 5, colSpan: 6, rowSpan: 4 },
+    // { id: 'widget5', title: 'Learning', content: '<h3>Current Learning</h3><p>Exploring new technologies</p>', col: 7, row: 5, colSpan: 6, rowSpan: 4 }
   ],
   preset2: [
     { id: 'widget1', title: 'Hero', content: '<h3>Hi, I\'m Tim</h3><p>Fullstack Developer</p>', col: 1, row: 1, colSpan: 12, rowSpan: 3 },
