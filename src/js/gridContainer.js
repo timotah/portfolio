@@ -9,10 +9,12 @@ export class GridContainer {
     this.draggingWidget = null;
     this.resizingWidget = null;
     this.placeholder = null;
-    this.tempPositions = new Map();
     this.dragOffset = { x: 0, y: 0 };
     this.initialSize = { colSpan: 0, rowSpan: 0 };
     this.onModify = onModify;
+
+    // Initialize occupancy grid for O(1) collision detection
+    this.initializeOccupancyGrid();
 
     this.setupDragAndDrop();
     this.setupResize();
@@ -26,6 +28,74 @@ export class GridContainer {
     this.container.style.gridTemplateColumns = `repeat(${this.columns}, 1fr)`;
     this.container.style.gridTemplateRows = `repeat(${this.rows}, 1fr)`;
     this.container.style.gap = "10px";
+  }
+
+  /**
+   * Initialize the occupancy grid for O(1) collision detection
+   * Each cell stores the widget ID occupying it, or null if empty
+   */
+  initializeOccupancyGrid() {
+    this.occupancyGrid = Array(this.rows)
+      .fill(null)
+      .map(() => Array(this.columns).fill(null));
+  }
+
+  /**
+   * Mark a widget's position in the occupancy grid
+   * Time complexity: O(rowSpan × colSpan)
+   */
+  markWidgetInGrid(widget) {
+    for (let r = widget.row - 1; r < widget.row - 1 + widget.rowSpan; r++) {
+      for (let c = widget.col - 1; c < widget.col - 1 + widget.colSpan; c++) {
+        if (r >= 0 && r < this.rows && c >= 0 && c < this.columns) {
+          this.occupancyGrid[r][c] = widget.id;
+        }
+      }
+    }
+  }
+
+  /**
+   * Clear a widget's position from the occupancy grid
+   * Time complexity: O(rowSpan × colSpan)
+   */
+  clearWidgetFromGrid(widget) {
+    for (let r = widget.row - 1; r < widget.row - 1 + widget.rowSpan; r++) {
+      for (let c = widget.col - 1; c < widget.col - 1 + widget.colSpan; c++) {
+        if (r >= 0 && r < this.rows && c >= 0 && c < this.columns) {
+          this.occupancyGrid[r][c] = null;
+        }
+      }
+    }
+  }
+
+  /**
+   * Check if a position overlaps with any widget using occupancy grid
+   * Time complexity: O(rowSpan × colSpan) - much faster than O(n × rowSpan × colSpan)
+   * Returns: true if position is free, false if occupied
+   */
+  isPositionFreeInGrid(col, row, colSpan, rowSpan, excludeWidgetId = null) {
+    // Check bounds
+    if (
+      col < 1 ||
+      row < 1 ||
+      col + colSpan - 1 > this.columns ||
+      row + rowSpan - 1 > this.rows
+    ) {
+      return false;
+    }
+
+    // Check each cell in the occupancy grid
+    for (let r = row - 1; r < row - 1 + rowSpan; r++) {
+      for (let c = col - 1; c < col - 1 + colSpan; c++) {
+        const occupyingWidgetId = this.occupancyGrid[r][c];
+        // If cell is occupied by a widget that's not excluded, position is not free
+        if (occupyingWidgetId !== null && occupyingWidgetId !== excludeWidgetId) {
+          return false;
+        }
+      }
+    }
+
+    return true;
   }
 
   addWidget(widget) {
@@ -43,11 +113,17 @@ export class GridContainer {
     this.widgets.push(widget);
     const widgetEl = widget.create();
     this.container.appendChild(widgetEl);
+    
+    // Mark widget in occupancy grid
+    this.markWidgetInGrid(widget);
   }
 
   removeWidget(widgetId) {
     const index = this.widgets.findIndex((w) => w.id === widgetId);
     if (index !== -1) {
+      // Clear widget from occupancy grid
+      this.clearWidgetFromGrid(this.widgets[index]);
+      
       this.widgets[index].element.remove();
       this.widgets.splice(index, 1);
     }
@@ -124,11 +200,10 @@ export class GridContainer {
   }
 
   findPushPosition(widget, excludedWidgets = new Set()) {
-    let col = widget.col;
-    let row = widget.row;
-
-    while (row <= this.rows - widget.rowSpan + 1) {
-      while (col <= this.columns - widget.colSpan + 1) {
+    // Start from the widget's current row and scan downward
+    // Within each row, scan left to right
+    for (let row = widget.row; row <= this.rows - widget.rowSpan + 1; row++) {
+      for (let col = 1; col <= this.columns - widget.colSpan + 1; col++) {
         if (
           this.isValidPositionForPush(
             col,
@@ -140,16 +215,14 @@ export class GridContainer {
         ) {
           return { col, row };
         }
-        col++;
       }
-      col = 1;
-      row++;
     }
 
     return null;
   }
 
   isValidPositionForPush(col, row, colSpan, rowSpan, excludedWidgets) {
+    // Check bounds
     if (
       col < 1 ||
       row < 1 ||
@@ -159,23 +232,20 @@ export class GridContainer {
       return false;
     }
 
-    for (const widget of this.widgets) {
-      if (excludedWidgets.has(widget)) continue;
+    // Use occupancy grid for O(rowSpan × colSpan) checking instead of O(n × rowSpan × colSpan)
+    // Convert excluded widgets Set to Set of IDs for faster lookup
+    const excludedIds = new Set(
+      Array.from(excludedWidgets).map((w) => w.id)
+    );
 
-      const widgetEndCol = widget.col + widget.colSpan - 1;
-      const widgetEndRow = widget.row + widget.rowSpan - 1;
-      const endCol = col + colSpan - 1;
-      const endRow = row + rowSpan - 1;
-
-      if (
-        !(
-          col > widgetEndCol ||
-          endCol < widget.col ||
-          row > widgetEndRow ||
-          endRow < widget.row
-        )
-      ) {
-        return false;
+    // Check each cell in the occupancy grid
+    for (let r = row - 1; r < row - 1 + rowSpan; r++) {
+      for (let c = col - 1; c < col - 1 + colSpan; c++) {
+        const occupyingWidgetId = this.occupancyGrid[r][c];
+        // If cell is occupied by a widget that's not excluded, position is invalid
+        if (occupyingWidgetId !== null && !excludedIds.has(occupyingWidgetId)) {
+          return false;
+        }
       }
     }
 
@@ -192,6 +262,7 @@ export class GridContainer {
       targetRow,
       draggingWidget.colSpan,
       draggingWidget.rowSpan,
+      draggingWidget,
     );
     displaced.forEach((w) => toProcess.add(w));
 
@@ -263,6 +334,9 @@ export class GridContainer {
     this.draggingWidget = widget;
     widgetEl.classList.add("dragging");
 
+    // Clear widget from occupancy grid while dragging
+    this.clearWidgetFromGrid(widget);
+
     const rect = widgetEl.getBoundingClientRect();
     this.dragOffset.x = clientX - rect.left;
     this.dragOffset.y = clientY - rect.top;
@@ -316,13 +390,36 @@ export class GridContainer {
         window.getComputedStyle(this.placeholder).gridRowStart,
       );
 
-      this.draggingWidget.updatePosition(placeholderCol, placeholderRow);
+      console.log('=== DROP EVENT ===');
+      console.log('Dragged widget:', this.draggingWidget.id, 'should go to', placeholderCol, placeholderRow);
+      console.log('Dragged widget current pos:', this.draggingWidget.col, this.draggingWidget.row);
 
-      this.tempPositions.forEach((pos, widget) => {
-        widget.updatePosition(pos.col, pos.row);
-        widget.element.style.opacity = "1";
+      // Calculate push positions at drop time
+      const pushPositions = this.calculatePushPositions(
+        this.draggingWidget,
+        placeholderCol,
+        placeholderRow,
+      );
+
+      console.log('Push positions calculated:', pushPositions.size);
+      pushPositions.forEach((pos, widget) => {
+        console.log('  -', widget.id, 'will move from', widget.col, widget.row, 'to', pos.col, pos.row);
       });
-      this.tempPositions.clear();
+
+      // Update dragged widget to placeholder position
+      console.log('Updating dragged widget to:', placeholderCol, placeholderRow);
+      this.draggingWidget.updatePosition(placeholderCol, placeholderRow);
+      this.markWidgetInGrid(this.draggingWidget);
+      console.log('Dragged widget now at:', this.draggingWidget.col, this.draggingWidget.row);
+
+      // Push all displaced widgets
+      pushPositions.forEach((pos, widget) => {
+        console.log('Moving', widget.id, 'to', pos.col, pos.row);
+        this.clearWidgetFromGrid(widget);
+        widget.updatePosition(pos.col, pos.row);
+        this.markWidgetInGrid(widget);
+        console.log('  -', widget.id, 'now at:', widget.col, widget.row);
+      });
 
       if (this.placeholder) {
         this.placeholder.remove();
@@ -380,18 +477,8 @@ export class GridContainer {
     this.placeholder.style.gridColumn = `${col} / span ${this.draggingWidget.colSpan}`;
     this.placeholder.style.gridRow = `${row} / span ${this.draggingWidget.rowSpan}`;
 
-    const pushPositions = this.calculatePushPositions(
-      this.draggingWidget,
-      col,
-      row,
-    );
-    this.tempPositions = pushPositions;
-
-    pushPositions.forEach((pos, widget) => {
-      widget.element.style.gridColumn = `${pos.col} / span ${widget.colSpan}`;
-      widget.element.style.gridRow = `${pos.row} / span ${widget.rowSpan}`;
-      widget.element.style.opacity = "0.5";
-    });
+    // Don't actually move widgets during drag - just show placeholder
+    // Push logic will be applied on drop
   }
 
   setupResize() {
@@ -529,5 +616,6 @@ export class GridContainer {
   clear() {
     this.container.innerHTML = "";
     this.widgets = [];
+    this.initializeOccupancyGrid();
   }
 }
